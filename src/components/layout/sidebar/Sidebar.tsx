@@ -78,7 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Sidebar Container */}
       <aside className={`
-        fixed inset-y-0 left-0 z-[100] w-[300px] ${isAdmin && !activeCompany ? 'bg-black' : 'bg-[#081526]'} border-r border-slate-800 flex flex-col transition-transform duration-300 ease-in-out will-change-transform
+        fixed inset-y-0 left-0 z-[100] w-[300px] bg-[#081526] border-r border-slate-800 flex flex-col transition-transform duration-300 ease-in-out will-change-transform
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         ${isSidebarVisible ? 'lg:translate-x-0' : 'lg:-translate-x-full'}
       `}>

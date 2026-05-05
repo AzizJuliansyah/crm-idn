@@ -1,20 +1,20 @@
 'use client';
 
 import React from 'react';
-import { 
-  Badge, 
-  Subtext, 
+import {
+  Badge,
+  Subtext,
   Label,
-  Avatar, 
+  Avatar,
   ComboBox,
 } from '@/components/ui';
 import { ActionButton } from '@/components/shared/buttons/ActionButton';
 import { ActionMenu } from '@/components/shared/ActionMenu';
 import { Lead } from '@/lib/types';
-import { 
-  Table as TableIcon, 
-  Trash2, 
-  Clock, 
+import {
+  Table as TableIcon,
+  Trash2,
+  Clock,
   Zap,
   Users,
   Eye,
@@ -35,7 +35,7 @@ interface Props {
   onToggleUrgency: (id: number, current: boolean) => void;
   onUpdateStatus: (id: number, status: string) => void;
   stages: any[];
-  
+
   // Pagination
   page: number;
   pageSize: number;
@@ -81,7 +81,7 @@ export const LeadsTableView: React.FC<Props> = ({
       sortable: true,
       className: 'w-20 font-mono text-[11px] text-gray-400 py-5 px-6',
       render: (lead) => (
-        <span 
+        <span
           className="cursor-pointer hover:text-blue-600 transition-colors hover:underline"
           onClick={() => onEdit(lead)}
         >
@@ -108,9 +108,9 @@ export const LeadsTableView: React.FC<Props> = ({
       sortable: true,
       render: (lead) => (
         <div>
-          <div className="flex items-center cursor-pointer transition-colors hover:underline gap-1"  onClick={() => onEdit(lead)}>
+          <div className="flex items-center cursor-pointer transition-colors hover:underline gap-1" onClick={() => onEdit(lead)}>
             {lead.salutation && <span className="text-blue-500/70 font-medium">{lead.salutation}</span>}
-            <span 
+            <span
               className={` ${lead.is_urgent ? 'font-bold text-gray-900' : 'text-gray-700'}`}
             >
               {lead.name}
@@ -136,11 +136,11 @@ export const LeadsTableView: React.FC<Props> = ({
       sortable: true,
       render: (lead) => (
         <div className="flex items-center gap-2">
-          <Avatar 
-            name={lead.sales_profile?.full_name} 
-            src={lead.sales_profile?.avatar_url} 
-            size="sm" 
-            className="bg-blue-50 text-blue-600 border border-blue-100" 
+          <Avatar
+            name={lead.sales_profile?.full_name}
+            src={lead.sales_profile?.avatar_url}
+            size="sm"
+            className="bg-blue-50 text-blue-600 border border-blue-100"
           />
           <Label className="text-gray-700 font-medium">
             {lead.sales_profile?.full_name?.split(' ')[0] || '-'}
@@ -182,14 +182,13 @@ export const LeadsTableView: React.FC<Props> = ({
           <ActionMenu>
             <button
               onClick={(e) => { e.stopPropagation(); onToggleUrgency(lead.id, !!lead.is_urgent); }}
-              className={`w-full text-left px-4 py-2.5 text-[11px] font-bold uppercase flex items-center gap-2 transition-none ${
-                lead.is_urgent ? 'text-amber-600 bg-amber-50/30' : 'text-gray-600 hover:bg-gray-50'
-              }`}
+              className={`w-full text-left px-4 py-2.5 text-[11px] font-bold uppercase flex items-center gap-2 transition-none ${lead.is_urgent ? 'text-amber-600 bg-amber-50/30' : 'text-gray-600 hover:bg-gray-50'
+                }`}
             >
               <Zap size={14} className={lead.is_urgent ? 'fill-amber-500' : ''} />
               {lead.is_urgent ? 'Hapus Prioritas' : 'Tandai Prioritas'}
             </button>
-            
+
             <button
               onClick={() => onEdit(lead)}
               className="w-full text-left px-4 py-2.5 text-[11px] font-bold uppercase text-blue-600 hover:bg-blue-50 flex items-center gap-2 transition-none"
@@ -197,7 +196,7 @@ export const LeadsTableView: React.FC<Props> = ({
               <Eye size={14} />
               Detail Lead
             </button>
-            
+
             <button
               onClick={(e) => { e.stopPropagation(); onDelete(lead.id); }}
               className="w-full text-left px-4 py-2.5 text-[11px] font-bold uppercase text-rose-600 hover:bg-rose-50 border-t border-gray-50 flex items-center gap-2 transition-none"
@@ -220,18 +219,18 @@ export const LeadsTableView: React.FC<Props> = ({
       selectedIds={selectedIds}
       onToggleSelect={onToggleSelect}
       onToggleSelectAll={onToggleSelectAll}
-      
+
       page={page}
       pageSize={pageSize}
       totalCount={totalCount}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
       isLoading={isLoading}
-      
+
       emptyMessage="Tidak ada lead yang ditemukan"
       emptyIcon={<Users size={48} className="mx-auto opacity-10 text-gray-400" />}
-      rowClassName={(lead) => lead.is_urgent ? '!border-l-amber-400 !bg-amber-50/50' : ''}
-      headerRowClassName="border-l-4 border-l-[#081526]"
+      rowClassName={(lead) => lead.is_urgent ? '!border-l-amber-500 !bg-amber-100/50 even:!bg-amber-50' : ''}
+      headerRowClassName="border-none"
     />
   );
 };

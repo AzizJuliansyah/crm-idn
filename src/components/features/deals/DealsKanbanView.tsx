@@ -64,7 +64,7 @@ export const DealsKanbanView: React.FC<Props> = ({
       <div
         onClick={() => onEdit(deal)}
         className={`group p-3 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:border-blue-300 transition-all cursor-grab active:cursor-grabbing transform hover:-translate-y-1 relative ${isDragged ? 'opacity-30' : ''
-          } ${hasUrgency && deal.is_urgent ? 'border-l-3 border-l-amber-400 bg-amber-50 shadow-amber-100/50' : ''}`}
+          } ${hasUrgency && deal.is_urgent ? 'border-l-4 border-l-amber-500 bg-amber-50 shadow-sm shadow-amber-100/50' : ''}`}
       >
         {hasUrgency && deal.is_urgent && (
           <div className="absolute top-1 left-2">

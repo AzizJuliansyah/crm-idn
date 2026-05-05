@@ -2,22 +2,22 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { 
-  Badge, 
+import {
+  Badge,
   Label,
-  Avatar, 
+  Avatar,
   ComboBox,
 } from '@/components/ui';
 import { Deal, Pipeline } from '@/lib/types';
 import { ActionButton } from '@/components/shared/buttons/ActionButton';
 import { ActionMenu } from '@/components/shared/ActionMenu';
-import { 
-  Trash2, 
-  Edit2, 
-  FileText, 
-  Plus, 
-  FilePlus, 
-  Clock, 
+import {
+  Trash2,
+  Edit2,
+  FileText,
+  Plus,
+  FilePlus,
+  Clock,
   Zap,
   TrendingUp,
   Eye,
@@ -90,7 +90,7 @@ export const DealsTableView: React.FC<Props> = ({
       sortable: true,
       className: 'text-gray-500 font-mono w-20',
       render: (deal) => (
-        <span 
+        <span
           className="cursor-pointer hover:text-blue-600 transition-colors hover:underline"
           onClick={() => onEdit(deal)}
         >
@@ -117,14 +117,14 @@ export const DealsTableView: React.FC<Props> = ({
       sortable: true,
       render: (deal) => (
         <div>
-          <div 
+          <div
             className={`font-bold text-gray-900 mb-1 cursor-pointer hover:text-blue-600 transition-colors hover:underline ${deal.is_urgent ? 'text-amber-900' : ''}`}
             onClick={() => onEdit(deal)}
           >
             {deal.name}
           </div>
           <div className="flex items-center gap-1.5 flex-wrap">
-            <Label 
+            <Label
               className="text-[10px] text-indigo-600 !capitalize font-medium cursor-pointer hover:text-indigo-800"
               onClick={() => onEdit(deal)}
             >
@@ -218,11 +218,11 @@ export const DealsTableView: React.FC<Props> = ({
       sortable: true,
       render: (deal) => (
         <div className="flex items-center gap-2">
-          <Avatar 
-            name={deal.sales_profile?.full_name} 
-            src={deal.sales_profile?.avatar_url} 
-            size="sm" 
-            className="bg-blue-50 text-blue-600 border border-blue-100" 
+          <Avatar
+            name={deal.sales_profile?.full_name}
+            src={deal.sales_profile?.avatar_url}
+            size="sm"
+            className="bg-blue-50 text-blue-600 border border-blue-100"
           />
           <Label className="text-gray-700 font-medium">
             {deal.sales_profile?.full_name?.split(' ')[0] || '-'}
@@ -242,9 +242,8 @@ export const DealsTableView: React.FC<Props> = ({
             <ActionMenu>
               <button
                 onClick={(e) => { e.stopPropagation(); onToggleUrgency(deal.id, !!deal.is_urgent); }}
-                className={`w-full text-left px-4 py-2.5 text-[11px] font-bold uppercase flex items-center gap-2 transition-none ${
-                  deal.is_urgent ? 'text-amber-600 bg-amber-50/30' : 'text-gray-600 hover:bg-gray-50'
-                }`}
+                className={`w-full text-left px-4 py-2.5 text-[11px] font-bold uppercase flex items-center gap-2 transition-none ${deal.is_urgent ? 'text-amber-600 bg-amber-50/30' : 'text-gray-600 hover:bg-gray-50'
+                  }`}
               >
                 <Zap size={14} className={deal.is_urgent ? 'fill-amber-500' : ''} />
                 {deal.is_urgent ? 'Hapus Prioritas' : 'Tandai Prioritas'}
@@ -303,17 +302,17 @@ export const DealsTableView: React.FC<Props> = ({
       selectedIds={selectedIds}
       onToggleSelect={onToggleSelect}
       onToggleSelectAll={onToggleSelectAll}
-      
+
       page={page}
       pageSize={pageSize}
       totalCount={totalCount}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
       isLoading={isLoading}
-      
+
       emptyMessage="Tidak ada transaksi ditemukan"
       emptyIcon={<TrendingUp size={48} className="mx-auto opacity-10 text-gray-400" />}
-      rowClassName={(deal) => deal.is_urgent ? '!border-l-amber-400 !bg-amber-50/50' : ''}
+      rowClassName={(deal) => deal.is_urgent ? '!border-l-amber-500 !bg-amber-100/50 even:!bg-amber-50' : ''}
       headerRowClassName="border-l-4 border-l-[#081526]"
     />
   );

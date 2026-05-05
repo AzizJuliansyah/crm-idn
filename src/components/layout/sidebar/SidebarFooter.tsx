@@ -25,7 +25,7 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({
   activeCompany
 }) => {
   return (
-    <div className={`p-4 border-t border-slate-800 flex items-center justify-between gap-2 ${isAdmin && !activeCompany ? 'bg-black' : 'bg-[#081526]/50'}`}>
+    <div className="p-4 border-t border-slate-800 flex items-center justify-between gap-2 bg-[#081526]/50">
       <Link 
         href={getPathFromViewId('profil_saya')} 
         className="flex-1 flex items-center gap-3 overflow-hidden p-2 rounded-xl text-left cursor-pointer hover:bg-white/5 transition-all border border-transparent hover:border-slate-700 group" 
@@ -42,7 +42,7 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({
           {user ? (
             <>
               <Subtext className="text-[11px] font-semibold text-gray-100 truncate ">{user.full_name}</Subtext>
-              <Subtext className="text-[9px] text-gray-500 font-medium !capitalize ! truncate">{currentRoleName}</Subtext>
+              <Subtext className="text-[9px] text-gray-400 font-medium !capitalize ! truncate">{currentRoleName}</Subtext>
             </>
           ) : (
             <div className="space-y-1.5">

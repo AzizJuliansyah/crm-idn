@@ -81,24 +81,24 @@ export const Pagination: React.FC<PaginationProps> = ({
   const endEntry = Math.min(currentPage * pageSize, totalCount);
 
   return (
-    <div className={`flex flex-col md:flex-row items-center justify-between gap-4 px-6 py-4 bg-gray-50/50 border-t border-gray-100 ${className}`}>
+    <div className={`flex flex-col md:flex-row items-center justify-between gap-4 px-6 py-4 bg-[#081526] border-t border-slate-800 ${className}`}>
       {/* Entries Info */}
       <div className="flex items-center gap-3">
-        <Subtext className="text-[10px] uppercase font-bold text-gray-400 tracking-wider whitespace-nowrap">
-          Menampilkan <span className="text-gray-900">{totalCount > 0 ? startEntry : 0}-{endEntry}</span> dari <span className="text-gray-900">{totalCount}</span> Data
+        <Subtext className="text-[10px] uppercase font-bold text-white tracking-wider whitespace-nowrap">
+          Menampilkan {totalCount > 0 ? startEntry : 0}-{endEntry} dari {totalCount} Data
         </Subtext>
         
-        <div className="h-4 w-[1px] bg-gray-200 mx-2 hidden md:block" />
+        <div className="h-4 w-[1px] bg-slate-700 mx-2 hidden md:block" />
         
         <div className="flex items-center gap-2">
-          <Subtext className="text-[10px] uppercase font-bold text-gray-400 whitespace-nowrap mr-1">Baris:</Subtext>
+          <Subtext className="text-[10px] uppercase font-bold text-white whitespace-nowrap mr-1">Baris:</Subtext>
           <ComboBox
             options={pageSizeOptions}
             value={pageSize}
             onChange={(val) => onPageSizeChange(Number(val))}
             size="sm"
             hideSearch
-            triggerClassName="!py-1.5 !px-3 !bg-white !border-gray-200 !text-[10px] !font-bold !w-32"
+            triggerClassName="!py-1.5 !px-3 !bg-slate-800/50 !border-slate-700 !text-white [&_span]:!text-white [&_svg]:!text-white !text-[10px] !font-bold !w-32 hover:!border-slate-600"
           />
         </div>
       </div>
@@ -106,7 +106,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       {/* Page Navigation */}
       <div className="flex items-center gap-1.5">
         <Button
-          variant="ghost"
+          variant="ghost-dark"
           size="sm"
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
@@ -115,7 +115,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           <ChevronsLeft size={14} />
         </Button>
         <Button
-          variant="ghost"
+          variant="ghost-dark"
           size="sm"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
@@ -128,21 +128,21 @@ export const Pagination: React.FC<PaginationProps> = ({
           {getPageNumbers().map(p => (
             <Button
               key={p}
-              variant={currentPage === p ? 'primary' : 'ghost'}
+              variant={currentPage === p ? 'primary' : 'ghost-dark'}
               size="sm"
               onClick={() => onPageChange(p)}
-              className={`min-w-[32px] !h-8 !p-0 font-bold ${currentPage === p ? 'border-2 border-blue-500 bg-blue-50 text-blue-600' : ''}`}
+              className={`min-w-[32px] !h-8 !p-0 font-bold ${currentPage === p ? 'border-2 border-blue-500 bg-blue-600 text-white' : ''}`}
             >
               {p}
             </Button>
           ))}
           {totalPages > 5 && getPageNumbers()[getPageNumbers().length - 1] < totalPages && (
-            <span className="text-gray-400 px-1">...</span>
+            <span className="text-white px-1">...</span>
           )}
         </div>
 
         <Button
-          variant="ghost"
+          variant="ghost-dark"
           size="sm"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
@@ -151,7 +151,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           <ChevronRight size={14} />
         </Button>
         <Button
-          variant="ghost"
+          variant="ghost-dark"
           size="sm"
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages}
@@ -163,17 +163,17 @@ export const Pagination: React.FC<PaginationProps> = ({
 
       {/* Jump to Page */}
       <div className="flex items-center gap-2">
-        <Subtext className="text-[10px] uppercase font-bold text-gray-400 whitespace-nowrap">Loncat ke:</Subtext>
+        <Subtext className="text-[10px] uppercase font-bold text-white whitespace-nowrap">Loncat ke:</Subtext>
         <div className="relative group">
           <Input
             value={jumpValue}
             onChange={(e) => setJumpValue(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleJump()}
             onBlur={handleJump}
-            className="!py-1.5 !px-3 !pl-8 !h-8 !w-20 !text-[10px] !font-bold !bg-white group-hover:border-blue-400 transition-all border-gray-200"
+            className="!py-1.5 !px-3 !pl-8 !h-8 !w-20 !text-[10px] !font-bold !bg-slate-800/50 !text-white group-hover:border-slate-600 transition-all border-slate-700"
             containerClassName="!space-y-0"
           />
-          <Hash className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-300 group-hover:text-blue-400 transition-colors" size={12} />
+          <Hash className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 group-hover:text-blue-400 transition-colors" size={12} />
         </div>
       </div>
     </div>

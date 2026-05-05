@@ -26,8 +26,8 @@ interface Props {
   onToggleSelectAll?: () => void;
 }
 
-export const SupportTicketsTableView: React.FC<Props> = ({ 
-  tickets, onEdit, onDelete, isLoading, 
+export const SupportTicketsTableView: React.FC<Props> = ({
+  tickets, onEdit, onDelete, isLoading,
   page, pageSize, totalCount, onPageChange, onPageSizeChange,
   sortConfig, onSort,
   selectedIds, onToggleSelect, onToggleSelectAll
@@ -94,9 +94,8 @@ export const SupportTicketsTableView: React.FC<Props> = ({
             {t.status}
           </Badge>
           {t.priority && t.priority.toLowerCase() !== 'normal' && (
-            <div className={`px-2 py-1 rounded-full text-[9px] font-bold tracking-wide uppercase flex items-center gap-1 shadow-none border ${
-              t.priority.toLowerCase() === 'urgent' || t.priority.toLowerCase() === 'high' ? 'bg-rose-100 text-rose-700 border-rose-200' : 'bg-amber-100 text-amber-700 border-amber-200'
-            }`}>
+            <div className={`px-2 py-1 rounded-full text-[9px] font-bold tracking-wide uppercase flex items-center gap-1 shadow-none border ${t.priority.toLowerCase() === 'urgent' || t.priority.toLowerCase() === 'high' ? 'bg-rose-100 text-rose-700 border-rose-200' : 'bg-amber-100 text-amber-700 border-amber-200'
+              }`}>
               <Zap size={10} fill="currentColor" />
               {t.priority}
             </div>

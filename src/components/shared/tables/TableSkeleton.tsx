@@ -42,13 +42,13 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({
       )}
 
       {/* Table Skeleton */}
-      <div className="bg-white rounded-2xl border-2 border-gray-300 overflow-hidden shadow-none">
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
+      <div className="bg-[#081526] rounded-2xl border-2 border-gray-300 overflow-hidden shadow-none flex flex-col">
+        <div className="overflow-x-auto overflow-y-auto flex-1 table-scrollbar bg-white">
+          <table className="w-full border-separate border-spacing-0">
             <thead>
-              <tr className="bg-[#081526]">
+              <tr className="bg-[#081526] sticky top-0 z-10 shadow-[0_0_0_1px_#081526]">
                 {Array.from({ length: columnCount }).map((_, i) => (
-                  <th key={i} className="px-6 py-5 text-left border-b border-white/5">
+                  <th key={i} className="px-4 py-3 h-12 text-left border-b border-white/5">
                     <Skeleton className="h-4 w-24 bg-white/20 rounded-md" />
                   </th>
                 ))}

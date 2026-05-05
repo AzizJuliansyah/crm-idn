@@ -49,6 +49,28 @@ body {
     background: #d1d5db;
   }
 }
+
+@utility table-scrollbar {
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #e5e7eb;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #d1d5db;
+  }
+  &::-webkit-scrollbar-button:vertical:start {
+    display: block;
+    height: 48px;
+    background: #081526;
+  }
+}
 @keyframes progress {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
@@ -56,4 +78,14 @@ body {
 
 .animate-progress {
   animation: progress 1.5s infinite ease-in-out;
+}
+
+@utility bg-stripe-amber {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #fffbeb,
+    #fffbeb 10px,
+    #fef3c7 10px,
+    #fef3c7 20px
+  );
 }

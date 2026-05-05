@@ -83,7 +83,7 @@ export function BaseDataTable<T extends { id: number | string }>({
 
   const SortIcon = ({ colKey }: { colKey: string }) => {
     const isSorted = onSort && sortConfig?.key === colKey;
-    const colorClass = isSorted ? (sortIconColor || 'text-black') : 'opacity-20 group-hover:opacity-100 transition-opacity';
+    const colorClass = isSorted ? (sortIconColor || 'text-white') : 'opacity-20 group-hover:opacity-100 transition-opacity';
     
     if (!isSorted) {
       return <ArrowUpDown size={12} className={`ml-1 ${colorClass}`} />;
@@ -110,8 +110,8 @@ export function BaseDataTable<T extends { id: number | string }>({
       )}
     >
       <Table className="w-full text-left border-collapse min-w-[800px]">
-        <TableHeader className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-gray-100">
-          <TableRow className={`!bg-transparent border-none text-emerald-600 py-6 ${headerRowClassName || ''}`}>
+        <TableHeader className="sticky top-[-1px] z-20 bg-[#081526] border-b border-white/10">
+          <TableRow className={`bg-[#081526] border-none ${headerRowClassName || ''}`}>
             {onToggleSelectAll && (
               <TableCell isHeader className="px-6 py-5 w-12 text-center">
                 <Checkbox

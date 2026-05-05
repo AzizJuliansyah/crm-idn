@@ -7,15 +7,13 @@ interface TableProps {
 }
 
 export const Table: React.FC<TableProps> = ({ children, className = '' }) => (
-  <div className={`overflow-x-auto w-full custom-scrollbar outline-none rounded-2xl overflow-hidden ${className}`}>
-    <table className="w-full text-left border-collapse">
-      {children}
-    </table>
-  </div>
+  <table className={`w-full text-left border-separate border-spacing-0 ${className}`}>
+    {children}
+  </table>
 );
 
 export const TableHeader: React.FC<TableProps> = ({ children, className = '' }) => (
-  <thead className={`bg-[#081526] sticky top-0 z-10 ${className}`}>
+  <thead className={`bg-[#081526] sticky top-0 z-20 shadow-[0_0_0_1px_#081526] ${className}`}>
     {children}
   </thead>
 );
@@ -46,7 +44,7 @@ export const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
       return (
         <th
           ref={ref as any}
-          className={`px-4 py-3 text-[12px] font-bold text-white uppercase border-b border-white/5 bg-[#081526] ${className}`}
+          className={`px-4 py-3 text-[12px] font-bold text-white uppercase border-b border-white/10 bg-[#081526] ${className}`}
           {...props}
         >
           {children}
@@ -157,8 +155,8 @@ export const TableContainer: React.FC<TableContainerProps> = ({
   className = '',
   containerClassName = ''
 }) => (
-  <div className={`bg-white rounded-2xl border-2 border-gray-300 text-gray-900 flex flex-col overflow-hidden ${height} ${containerClassName}`}>
-    <div className={`overflow-x-auto overflow-y-auto flex-1 custom-scrollbar scroll-smooth outline-none ${className}`}>
+  <div className={`bg-[#081526] rounded-2xl border-2 border-gray-300 text-gray-900 flex flex-col overflow-hidden relative ${height} ${containerClassName}`}>
+    <div className={`overflow-x-auto overflow-y-auto flex-1 table-scrollbar scroll-smooth outline-none bg-white ${className}`}>
       {children}
     </div>
     {footer}

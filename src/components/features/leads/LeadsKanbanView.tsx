@@ -47,7 +47,7 @@ export const LeadsKanbanView: React.FC<Props> = ({
     <div
       onClick={() => onEdit(lead)}
       className={`group p-3 bg-white border-2 border-gray-300 rounded-xl hover:border-blue-500 transition-all cursor-pointer transform relative ${isDragged ? 'opacity-30' : 'hover:-translate-y-1'
-        } ${hasUrgency && lead.is_urgent ? 'border-l-4 border-l-amber-400 bg-amber-50/50' : ''}`}
+        } ${hasUrgency && lead.is_urgent ? 'border-l-4 border-l-amber-500 bg-amber-50 shadow-sm shadow-amber-100/50' : ''}`}
     >
       {hasUrgency && lead.is_urgent && (
         <div className="absolute top-1 left-2">

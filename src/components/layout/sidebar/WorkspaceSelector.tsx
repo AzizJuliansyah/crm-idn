@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Command, ArrowUpDown, ChevronDown, Monitor, Search, User, LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button, H1, Label, Subtext, Input } from '@/components/ui';
 import { Company, PlatformSettings } from '@/lib/types';
 import { getPathFromViewId } from '@/lib/navigation';
@@ -29,6 +30,7 @@ export const WorkspaceSelector: React.FC<WorkspaceSelectorProps> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -53,10 +55,10 @@ export const WorkspaceSelector: React.FC<WorkspaceSelectorProps> = ({
           onClick={() => !isLoading && setIsDropdownOpen(!isDropdownOpen)}
           variant="ghost-dark"
           align="left" size='sm'
-          className={`w-full group flex items-center gap-3 p-3 rounded-2xl transition-all duration-300 border-2 ${isLoading ? 'cursor-default border-slate-800' : 'cursor-pointer'} !normal-case ! ${isDropdownOpen ? 'bg-slate-800 border-slate-600 shadow-none' : (!activeCompany && isAdmin) ? 'bg-gray-900 border-gray-800 hover:border-gray-700' : 'bg-slate-800/40 border-slate-800 hover:border-slate-700 hover:bg-white/5 shadow-none'}`}
+          className={`w-full group flex items-center gap-3 p-3 rounded-2xl transition-all duration-300 border-2 ${isLoading ? 'cursor-default border-slate-800' : 'cursor-pointer'} !normal-case ! ${isDropdownOpen ? 'bg-slate-800 border-slate-600 shadow-none' : 'bg-slate-800/40 border-slate-800 hover:border-slate-700 hover:bg-white/5 shadow-none'}`}
         >
           <div className="relative">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-medium text-xs shadow-none transition-transform ${!isLoading && 'group-hover:scale-105'} duration-300 overflow-hidden ${(!activeCompany && isAdmin) ? 'bg-blue-600' : 'bg-slate-800'} ${isLoading && 'animate-pulse'}`}>
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-medium text-xs shadow-none transition-transform ${!isLoading && 'group-hover:scale-105'} duration-300 overflow-hidden bg-slate-800 ${isLoading && 'animate-pulse'}`}>
               {isLoading ? (
                 <div className="w-full h-full bg-slate-700" />
               ) : (!activeCompany && isAdmin) ? (
@@ -89,7 +91,7 @@ export const WorkspaceSelector: React.FC<WorkspaceSelectorProps> = ({
             <div className="max-h-[60vh] flex flex-col">
               {isAdmin && (
                 <div className="px-2 pb-2 mb-2 border-b-2 border-slate-800">
-                  <Button onClick={() => { switchCompany(null); setIsDropdownOpen(false); }} variant="ghost-dark" align="left" className={`w-full !px-3 !py-2 flex items-center gap-3 rounded-xl transition-all cursor-pointer !normal-case !h-auto ${!activeCompany ? 'bg-blue-600 text-white shadow-none' : 'hover:bg-white/5 text-slate-300'}`}>
+                  <Button onClick={() => { switchCompany(null); setIsDropdownOpen(false); router.push('/dashboard/admin'); }} variant="ghost-dark" align="left" className={`w-full !px-3 !py-2 flex items-center gap-3 rounded-xl transition-all cursor-pointer !normal-case !h-auto ${!activeCompany ? 'bg-indigo-600 text-white shadow-none' : 'hover:bg-white/5 text-slate-300'}`}>
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${!activeCompany ? 'bg-white text-blue-600' : 'bg-slate-800 text-slate-500'}`}><Monitor size={14} /></div>
                     <Label className={`text-[11px] font-semibold !capitalize ! cursor-pointer ${!activeCompany ? 'text-white' : 'text-slate-300'}`}>Platform Central</Label>
                   </Button>
@@ -109,7 +111,7 @@ export const WorkspaceSelector: React.FC<WorkspaceSelectorProps> = ({
               </div>
               <div className="px-2 space-y-1 overflow-y-auto custom-scrollbar">
                 {filteredCompanies.map(co => (
-                  <Button key={co.id} onClick={() => { switchCompany(co); setIsDropdownOpen(false); }} variant="ghost-dark" align="left" className={`w-full !px-3 !py-2 flex items-center gap-3 rounded-xl transition-all !capitalize !normal-case !h-auto cursor-pointer ${activeCompany?.id === co.id ? 'bg-indigo-600 text-white shadow-none' : 'hover:bg-white/5 text-slate-300'}`}>
+                  <Button key={co.id} onClick={() => { switchCompany(co); setIsDropdownOpen(false); router.push('/dashboard'); }} variant="ghost-dark" align="left" className={`w-full !px-3 !py-2 flex items-center gap-3 rounded-xl transition-all !capitalize !normal-case !h-auto cursor-pointer ${activeCompany?.id === co.id ? 'bg-indigo-600 text-white shadow-none' : 'hover:bg-white/5 text-slate-300'}`}>
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${activeCompany?.id === co.id ? 'bg-white text-indigo-600' : 'bg-slate-800 text-slate-500'}`}>{co.logo_url ? <img src={co.logo_url} className="w-full h-full object-cover rounded-lg" alt="Logo" /> : co.name.charAt(0)}</div>
                     <Label className={`text-[11px] truncate !capitalize ! cursor-pointer font-medium ${activeCompany?.id === co.id ? 'text-white' : 'text-slate-300'}`}>{co.name}</Label>
                   </Button>
