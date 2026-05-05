@@ -26,16 +26,17 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const pathname = usePathname();
   const activeView = getViewIdFromPath(pathname);
   
-  const {
-    user,
-    companies,
-    activeCompany,
-    switchCompany,
-    platformSettings,
-    logout: onLogout
-  } = useAppStore();
+  const user = useAppStore(state => state.user);
+  const companies = useAppStore(state => state.companies);
+  const activeCompany = useAppStore(state => state.activeCompany);
+  const switchCompany = useAppStore(state => state.switchCompany);
+  const platformSettings = useAppStore(state => state.platformSettings);
+  const onLogout = useAppStore(state => state.logout);
+  const authLoading = useAppStore(state => state.loading);
+  const isLoggingOut = useAppStore(state => state.isLoggingOut);
 
   const [userPermissions, setUserPermissions] = useState<string[]>([]);
+  const [isPermissionsLoading, setIsPermissionsLoading] = useState(true);
   const [currentRoleName, setCurrentRoleName] = useState<string>('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -122,38 +123,47 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   useEffect(() => {
     const fetchPermissions = async () => {
-      if (!user) return;
-      if (isAdmin && !activeCompany) {
-        setUserPermissions(ALL_POSSIBLE_MENU_LABELS);
-        setCurrentRoleName('Super Admin');
+      if (!user) {
+        setIsPermissionsLoading(false);
         return;
       }
+      setIsPermissionsLoading(true);
 
-      if (activeCompany) {
-        const { data } = await supabase
-          .from('company_members')
-          .select('company_roles(name, permissions)')
-          .eq('company_id', activeCompany.id)
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (data && (data as any).company_roles) {
-          const roleData = (data as any).company_roles;
-          setCurrentRoleName(roleData.name);
-          const perms = [...(roleData.permissions || [])];
-
-          if (perms.includes('Dashboard')) {
-            const autoDashboard = ['Data Client', 'Perusahaan Client', 'Produk', 'Projects', 'Penjualan', 'Penawaran', 'Proforma Invoice', 'Invoice', 'Kwitansi', 'Knowledge Base', 'Customer Support', 'Request Invoice', 'Request Kwitansi'];
-            autoDashboard.forEach(p => { if (!perms.includes(p)) perms.push(p); });
-          }
-          setUserPermissions(perms);
-        } else if (isAdmin) {
+      try {
+        if (isAdmin && !activeCompany) {
           setUserPermissions(ALL_POSSIBLE_MENU_LABELS);
           setCurrentRoleName('Super Admin');
-        } else {
-          setUserPermissions(['Dashboard', 'Data Client', 'Perusahaan Client', 'Produk', 'Penjualan', 'Knowledge Base', 'Customer Support']);
-          setCurrentRoleName('Member');
+          return;
         }
+
+        if (activeCompany) {
+          const { data } = await supabase
+            .from('company_members')
+            .select('company_roles(name, permissions)')
+            .eq('company_id', activeCompany.id)
+            .eq('user_id', user.id)
+            .maybeSingle();
+
+          if (data && (data as any).company_roles) {
+            const roleData = (data as any).company_roles;
+            setCurrentRoleName(roleData.name);
+            const perms = [...(roleData.permissions || [])];
+
+            if (perms.includes('Dashboard')) {
+              const autoDashboard = ['Data Client', 'Perusahaan Client', 'Produk', 'Projects', 'Penjualan', 'Penawaran', 'Proforma Invoice', 'Invoice', 'Kwitansi', 'Knowledge Base', 'Customer Support', 'Request Invoice', 'Request Kwitansi'];
+              autoDashboard.forEach(p => { if (!perms.includes(p)) perms.push(p); });
+            }
+            setUserPermissions(perms);
+          } else if (isAdmin) {
+            setUserPermissions(ALL_POSSIBLE_MENU_LABELS);
+            setCurrentRoleName('Super Admin');
+          } else {
+            setUserPermissions(['Dashboard', 'Data Client', 'Perusahaan Client', 'Produk', 'Penjualan', 'Knowledge Base', 'Customer Support']);
+            setCurrentRoleName('Member');
+          }
+        }
+      } finally {
+        setIsPermissionsLoading(false);
       }
     };
 
@@ -186,8 +196,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     return activeView.replace(/_/g, ' ');
   };
 
-  if (!user) return null;
-
   const menuStates = {
     isCrmOpen, setIsCrmOpen,
     isDealsExpanded, setIsDealsExpanded,
@@ -219,6 +227,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         projectPipelines={projectPipelines}
         salesRequestCategories={salesRequestCategories}
         menuStates={menuStates}
+        isLoading={authLoading || isPermissionsLoading || isLoggingOut || !user}
       />
 
       <main className={`flex-1 flex flex-col bg-white text-gray-900 overflow-hidden relative w-full transition-[padding] duration-300 ease-in-out will-change-[padding] ${isSidebarVisible ? 'lg:pl-[300px]' : 'lg:pl-0'}`}>

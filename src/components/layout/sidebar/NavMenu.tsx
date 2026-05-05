@@ -38,6 +38,7 @@ interface NavMenuProps {
   setIsClientOpen: (open: boolean) => void;
   isSettingsOpen: boolean;
   setIsSettingsOpen: (open: boolean) => void;
+  isLoading?: boolean;
 }
 
 export const NavMenu: React.FC<NavMenuProps> = ({
@@ -55,8 +56,9 @@ export const NavMenu: React.FC<NavMenuProps> = ({
   isRequestsExpanded, setIsRequestsExpanded,
   isClientOpen, setIsClientOpen,
   isSettingsOpen, setIsSettingsOpen,
+  isLoading
 }) => {
-  const canShow = (label: string) => userPermissions.includes(label);
+  const canShow = (label: string) => isLoading || userPermissions.includes(label);
 
   const activeStates = {
     isCrmActive: ['leads', 'pengaturan_leads', 'pengaturan_sumber_leads', 'deals', 'pengaturan_deals_pipeline', 'log_activity'].includes(activeView) || activeView.startsWith('deals_'),
@@ -77,6 +79,15 @@ export const NavMenu: React.FC<NavMenuProps> = ({
   const renderMenuItem = (id: string, label: string, icon: React.ReactNode, bgColorClass: string, iconColorClass: string = 'text-white') => {
     const path = getPathFromViewId(id);
     const isActive = activeView === id;
+
+    if (isLoading) {
+      return (
+        <div className="px-3 py-2.5 flex items-center gap-4 animate-pulse" key={id}>
+          <div className="w-8 h-8 rounded-lg bg-slate-800" />
+          <div className="h-3 w-20 bg-slate-800 rounded" />
+        </div>
+      );
+    }
 
     return (
       <div className="relative group" key={id}>
@@ -100,6 +111,16 @@ export const NavMenu: React.FC<NavMenuProps> = ({
 
   const renderSubMenuLevel1 = (id: string, label: string, icon: React.ReactNode, active: boolean) => {
     const path = getPathFromViewId(id);
+
+    if (isLoading) {
+      return (
+        <div className="px-3 py-2 flex items-center gap-3 animate-pulse" key={id}>
+          <div className="w-1 h-1" />
+          <div className="w-4 h-4 rounded bg-slate-800" />
+          <div className="h-2 w-24 bg-slate-800 rounded" />
+        </div>
+      );
+    }
 
     return (
       <div className="relative group" key={id}>
@@ -155,17 +176,23 @@ export const NavMenu: React.FC<NavMenuProps> = ({
       <div className="mt-2 mb-2">
         <div className="space-y-0.5">
           <div className="relative">
-              {activeStates.isCrmActive && (
+              {activeStates.isCrmActive && !isLoading && (
                 <div className="absolute left-[-12px] top-2 bottom-2 w-1 bg-blue-600 rounded-r-full z-10" />
               )}
-              <Button onClick={() => setIsCrmOpen(!isCrmOpen)} variant="ghost-dark" align="left" className={`w-full flex items-center justify-between !px-3 !py-2.5 rounded-xl transition-all duration-300 font-medium cursor-pointer !normal-case !h-auto group/crm ${activeStates.isCrmActive ? 'text-blue-400 bg-blue-400/5' : isCrmOpen ? 'text-white bg-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}>
+              <Button onClick={() => !isLoading && setIsCrmOpen(!isCrmOpen)} variant="ghost-dark" align="left" className={`w-full flex items-center justify-between !px-3 !py-2.5 rounded-xl transition-all duration-300 font-medium cursor-pointer !normal-case !h-auto group/crm ${activeStates.isCrmActive ? 'text-blue-400 bg-blue-400/5' : (isCrmOpen && !isLoading) ? 'text-white bg-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'} ${isLoading && 'animate-pulse'}`}>
                 <div className="flex-1 flex items-center gap-4">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-none ${activeStates.isCrmActive ? 'bg-indigo-600 text-white' : 'bg-indigo-500 text-white group-hover/crm:scale-110'}`}><Target size={14} /></div>
-                  <Label className={`text-[13px] !capitalize ! transition-colors duration-300 ${activeStates.isCrmActive ? 'text-blue-400 font-bold' : isCrmOpen ? 'text-white font-semibold' : 'text-inherit'}`}>CRM</Label>
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-none ${isLoading ? 'bg-slate-800' : activeStates.isCrmActive ? 'bg-indigo-600 text-white' : 'bg-indigo-500 text-white group-hover/crm:scale-110'}`}>
+                    {!isLoading && <Target size={14} />}
+                  </div>
+                  {isLoading ? (
+                    <div className="h-3 w-16 bg-slate-800 rounded" />
+                  ) : (
+                    <Label className={`text-[13px] !capitalize ! transition-colors duration-300 ${activeStates.isCrmActive ? 'text-blue-400 font-bold' : isCrmOpen ? 'text-white font-semibold' : 'text-inherit'}`}>CRM</Label>
+                  )}
                 </div>
-                <ChevronRight size={14} className={`transition-all duration-300 ${isCrmOpen ? 'rotate-90 text-indigo-400' : activeStates.isCrmActive ? 'text-indigo-400' : 'text-gray-600 group-hover/crm:translate-x-1'}`} />
+                {!isLoading && <ChevronRight size={14} className={`transition-all duration-300 ${isCrmOpen ? 'rotate-90 text-indigo-400' : activeStates.isCrmActive ? 'text-indigo-400' : 'text-gray-600 group-hover/crm:translate-x-1'}`} />}
               </Button>
-              {isCrmOpen && (
+              {isCrmOpen && !isLoading && (
                 <div className="space-y-0.5 mt-0.5 ml-8">
                   {renderSubMenuLevel1('leads', 'Leads', <Trello />, activeView === 'leads')}
                   
@@ -199,17 +226,23 @@ export const NavMenu: React.FC<NavMenuProps> = ({
             </div>
 
           <div className="relative">
-              {activeStates.isProjectActive && (
+              {activeStates.isProjectActive && !isLoading && (
                 <div className="absolute left-[-12px] top-2 bottom-2 w-1 bg-blue-600 rounded-r-full z-10 shadow-none" />
               )}
-              <Button onClick={() => setIsProjectOpen(!isProjectOpen)} variant="ghost-dark" align="left" className={`w-full flex items-center justify-between !px-3 !py-2.5 rounded-xl transition-all duration-300 font-medium cursor-pointer !normal-case !h-auto group/project ${activeStates.isProjectActive ? 'text-blue-400 bg-blue-400/5' : isProjectOpen ? 'text-white bg-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}>
+              <Button onClick={() => !isLoading && setIsProjectOpen(!isProjectOpen)} variant="ghost-dark" align="left" className={`w-full flex items-center justify-between !px-3 !py-2.5 rounded-xl transition-all duration-300 font-medium cursor-pointer !normal-case !h-auto group/project ${activeStates.isProjectActive ? 'text-blue-400 bg-blue-400/5' : (isProjectOpen && !isLoading) ? 'text-white bg-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'} ${isLoading && 'animate-pulse'}`}>
                 <div className="flex-1 flex items-center gap-4">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-none ${activeStates.isProjectActive ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white group-hover/project:scale-110'}`}><Briefcase size={14} /></div>
-                  <Label className={`text-[13px] !capitalize ! transition-colors duration-300 ${activeStates.isProjectActive ? 'text-blue-400 font-bold' : isProjectOpen ? 'text-white font-semibold' : 'text-inherit'}`}>Projects</Label>
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-none ${isLoading ? 'bg-slate-800' : activeStates.isProjectActive ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white group-hover/project:scale-110'}`}>
+                    {!isLoading && <Briefcase size={14} />}
+                  </div>
+                  {isLoading ? (
+                    <div className="h-3 w-20 bg-slate-800 rounded" />
+                  ) : (
+                    <Label className={`text-[13px] !capitalize ! transition-colors duration-300 ${activeStates.isProjectActive ? 'text-blue-400 font-bold' : isProjectOpen ? 'text-white font-semibold' : 'text-inherit'}`}>Projects</Label>
+                  )}
                 </div>
-                <ChevronRight size={14} className={`transition-all duration-300 ${isProjectOpen ? 'rotate-90 text-blue-400' : activeStates.isProjectActive ? 'text-blue-400' : 'text-gray-600 group-hover/project:translate-x-1'}`} />
+                {!isLoading && <ChevronRight size={14} className={`transition-all duration-300 ${isProjectOpen ? 'rotate-90 text-blue-400' : activeStates.isProjectActive ? 'text-blue-400' : 'text-gray-600 group-hover/project:translate-x-1'}`} />}
               </Button>
-              {isProjectOpen && (
+              {isProjectOpen && !isLoading && (
                 <div className="space-y-0.5 mt-0.5 ml-8">
                   {projectPipelines.map(p => renderSubMenuLevel2(`projects_${p.id}`, p.name, activeView === `projects_${p.id}`))}
                 </div>
@@ -217,17 +250,23 @@ export const NavMenu: React.FC<NavMenuProps> = ({
             </div>
 
           <div className="relative">
-              {activeStates.isSupportActive && (
+              {activeStates.isSupportActive && !isLoading && (
                 <div className="absolute left-[-12px] top-2 bottom-2 w-1 bg-blue-600 rounded-r-full z-10 shadow-none" />
               )}
-              <Button onClick={() => setIsSupportOpen(!isSupportOpen)} variant="ghost-dark" align="left" className={`w-full flex items-center justify-between !px-3 !py-2.5 rounded-xl transition-all duration-300 font-medium cursor-pointer !normal-case !h-auto group/support ${activeStates.isSupportActive ? 'text-blue-400 bg-blue-400/5' : isSupportOpen ? 'text-white bg-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}>
+              <Button onClick={() => !isLoading && setIsSupportOpen(!isSupportOpen)} variant="ghost-dark" align="left" className={`w-full flex items-center justify-between !px-3 !py-2.5 rounded-xl transition-all duration-300 font-medium cursor-pointer !normal-case !h-auto group/support ${activeStates.isSupportActive ? 'text-blue-400 bg-blue-400/5' : (isSupportOpen && !isLoading) ? 'text-white bg-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'} ${isLoading && 'animate-pulse'}`}>
                 <div className="flex-1 flex items-center gap-4">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-none ${activeStates.isSupportActive ? 'bg-rose-600 text-white' : 'bg-rose-500 text-white group-hover/support:scale-110'}`}><Headset size={14} /></div>
-                  <Label className={`text-[13px] !capitalize ! transition-colors duration-300 ${activeStates.isSupportActive ? 'text-blue-400 font-bold' : isSupportOpen ? 'text-white font-semibold' : 'text-inherit'}`}>Support</Label>
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-none ${isLoading ? 'bg-slate-800' : activeStates.isSupportActive ? 'bg-rose-600 text-white' : 'bg-rose-500 text-white group-hover/support:scale-110'}`}>
+                    {!isLoading && <Headset size={14} />}
+                  </div>
+                  {isLoading ? (
+                    <div className="h-3 w-16 bg-slate-800 rounded" />
+                  ) : (
+                    <Label className={`text-[13px] !capitalize ! transition-colors duration-300 ${activeStates.isSupportActive ? 'text-blue-400 font-bold' : isSupportOpen ? 'text-white font-semibold' : 'text-inherit'}`}>Support</Label>
+                  )}
                 </div>
-                <ChevronRight size={14} className={`transition-all duration-300 ${isSupportOpen ? 'rotate-90 text-rose-400' : activeStates.isSupportActive ? 'text-rose-400' : 'text-gray-600 group-hover/support:translate-x-1'}`} />
+                {!isLoading && <ChevronRight size={14} className={`transition-all duration-300 ${isSupportOpen ? 'rotate-90 text-rose-400' : activeStates.isSupportActive ? 'text-rose-400' : 'text-gray-600 group-hover/support:translate-x-1'}`} />}
               </Button>
-              {isSupportOpen && (
+              {isSupportOpen && !isLoading && (
                 <div className="space-y-0.5 mt-0.5 ml-8">
                   {canShow('Knowledge Base') && renderSubMenuLevel1('knowledge_base', 'Knowledge Base', <BookOpen />, activeView === 'knowledge_base')}
                   {renderSubMenuLevel1('customer_support', 'Semua Ticket', <Ticket />, activeView === 'customer_support')}
@@ -237,17 +276,23 @@ export const NavMenu: React.FC<NavMenuProps> = ({
             </div>
 
           <div className="relative">
-              {activeStates.isSalesActive && (
+              {activeStates.isSalesActive && !isLoading && (
                 <div className="absolute left-[-12px] top-2 bottom-2 w-1 bg-blue-600 rounded-r-full z-10 shadow-none" />
               )}
-              <Button onClick={() => setIsSalesOpen(!isSalesOpen)} variant="ghost-dark" align="left" className={`w-full flex items-center justify-between !px-3 !py-2.5 rounded-xl transition-all duration-300 font-medium cursor-pointer !normal-case !h-auto group/sales ${activeStates.isSalesActive ? 'text-blue-400 bg-blue-400/5' : isSalesOpen ? 'text-white bg-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}>
+              <Button onClick={() => !isLoading && setIsSalesOpen(!isSalesOpen)} variant="ghost-dark" align="left" className={`w-full flex items-center justify-between !px-3 !py-2.5 rounded-xl transition-all duration-300 font-medium cursor-pointer !normal-case !h-auto group/sales ${activeStates.isSalesActive ? 'text-blue-400 bg-blue-400/5' : (isSalesOpen && !isLoading) ? 'text-white bg-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'} ${isLoading && 'animate-pulse'}`}>
                 <div className="flex-1 flex items-center gap-4">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-none ${activeStates.isSalesActive ? 'bg-sky-600 text-white' : 'bg-sky-500 text-white group-hover/sales:scale-110'}`}><ReceiptCent size={14} /></div>
-                  <Label className={`text-[13px] !capitalize ! transition-colors duration-300 ${activeStates.isSalesActive ? 'text-blue-400 font-bold' : isSalesOpen ? 'text-white font-semibold' : 'text-inherit'}`}>Penjualan</Label>
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-none ${isLoading ? 'bg-slate-800' : activeStates.isSalesActive ? 'bg-sky-600 text-white' : 'bg-sky-500 text-white group-hover/sales:scale-110'}`}>
+                    {!isLoading && <ReceiptCent size={14} />}
+                  </div>
+                  {isLoading ? (
+                    <div className="h-3 w-20 bg-slate-800 rounded" />
+                  ) : (
+                    <Label className={`text-[13px] !capitalize ! transition-colors duration-300 ${activeStates.isSalesActive ? 'text-blue-400 font-bold' : isSalesOpen ? 'text-white font-semibold' : 'text-inherit'}`}>Penjualan</Label>
+                  )}
                 </div>
-                <ChevronRight size={14} className={`transition-all duration-300 ${isSalesOpen ? 'rotate-90 text-sky-400' : activeStates.isSalesActive ? 'text-sky-400' : 'text-gray-600 group-hover/sales:translate-x-1'}`} />
+                {!isLoading && <ChevronRight size={14} className={`transition-all duration-300 ${isSalesOpen ? 'rotate-90 text-sky-400' : activeStates.isSalesActive ? 'text-sky-400' : 'text-gray-600 group-hover/sales:translate-x-1'}`} />}
               </Button>
-              {isSalesOpen && (
+              {isSalesOpen && !isLoading && (
                 <div className="space-y-0.5 mt-0.5 ml-8">
                   {canShow('Penawaran') && renderSubMenuLevel1('daftar_penawaran', 'Penawaran', <FileText />, activeView.includes('penawaran'))}
                   {canShow('Proforma Invoice') && renderSubMenuLevel1('daftar_proforma', 'Proforma', <FileCheck />, activeView.includes('proforma'))}
@@ -284,17 +329,23 @@ export const NavMenu: React.FC<NavMenuProps> = ({
             </div>
 
           <div className="relative">
-              {activeStates.isClientActive && (
+              {activeStates.isClientActive && !isLoading && (
                 <div className="absolute left-[-12px] top-2 bottom-2 w-1 bg-blue-600 rounded-r-full z-10 shadow-none" />
               )}
-              <Button onClick={() => setIsClientOpen(!isClientOpen)} variant="ghost-dark" align="left" className={`w-full flex items-center justify-between !px-3 !py-2.5 rounded-xl transition-all duration-300 font-medium cursor-pointer !normal-case !h-auto group/client ${activeStates.isClientActive ? 'text-blue-400 bg-blue-400/5' : isClientOpen ? 'text-white bg-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}>
+              <Button onClick={() => !isLoading && setIsClientOpen(!isClientOpen)} variant="ghost-dark" align="left" className={`w-full flex items-center justify-between !px-3 !py-2.5 rounded-xl transition-all duration-300 font-medium cursor-pointer !normal-case !h-auto group/client ${activeStates.isClientActive ? 'text-blue-400 bg-blue-400/5' : (isClientOpen && !isLoading) ? 'text-white bg-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'} ${isLoading && 'animate-pulse'}`}>
                 <div className="flex-1 flex items-center gap-4">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-none ${activeStates.isClientActive ? 'bg-violet-600 text-white' : 'bg-violet-500 text-white group-hover/client:scale-110'}`}><Users2 size={14} /></div>
-                  <Label className={`text-[13px] !capitalize ! transition-colors duration-300 ${activeStates.isClientActive ? 'text-blue-400 font-bold' : isClientOpen ? 'text-white font-semibold' : 'text-inherit'}`}>Client</Label>
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-none ${isLoading ? 'bg-slate-800' : activeStates.isClientActive ? 'bg-violet-600 text-white' : 'bg-violet-500 text-white group-hover/client:scale-110'}`}>
+                    {!isLoading && <Users2 size={14} />}
+                  </div>
+                  {isLoading ? (
+                    <div className="h-3 w-16 bg-slate-800 rounded" />
+                  ) : (
+                    <Label className={`text-[13px] !capitalize ! transition-colors duration-300 ${activeStates.isClientActive ? 'text-blue-400 font-bold' : isClientOpen ? 'text-white font-semibold' : 'text-inherit'}`}>Client</Label>
+                  )}
                 </div>
-                <ChevronRight size={14} className={`transition-all duration-300 ${isClientOpen ? 'rotate-90 text-violet-400' : activeStates.isClientActive ? 'text-violet-400' : 'text-gray-600 group-hover/client:translate-x-1'}`} />
+                {!isLoading && <ChevronRight size={14} className={`transition-all duration-300 ${isClientOpen ? 'rotate-90 text-violet-400' : activeStates.isClientActive ? 'text-violet-400' : 'text-gray-600 group-hover/client:translate-x-1'}`} />}
               </Button>
-              {isClientOpen && (
+              {isClientOpen && !isLoading && (
                 <div className="space-y-0.5 mt-0.5 ml-8">
                   {renderSubMenuLevel1('data_client', 'Data Client', <Users2 />, activeView === 'data_client')}
                   {canShow('Perusahaan Client') && renderSubMenuLevel1('perusahaan_client', 'Perusahaan', <Building2 />, activeView === 'perusahaan_client')}
@@ -310,17 +361,23 @@ export const NavMenu: React.FC<NavMenuProps> = ({
       <div className="mt-4 mb-4">
         <div className="space-y-0.5">
           <div className="relative">
-            {activeStates.isSettingsActive && (
+            {activeStates.isSettingsActive && !isLoading && (
               <div className="absolute left-[-12px] top-2 bottom-2 w-1 bg-blue-600 rounded-r-full z-10 shadow-none" />
             )}
-            <Button onClick={() => setIsSettingsOpen(!isSettingsOpen)} variant="ghost-dark" align="left" className={`w-full flex items-center justify-between !px-3 !py-2.5 rounded-xl transition-all duration-300 font-medium cursor-pointer !normal-case !h-auto group/settings ${activeStates.isSettingsActive ? 'text-blue-400 bg-blue-400/5' : isSettingsOpen ? 'text-white bg-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}>
+            <Button onClick={() => !isLoading && setIsSettingsOpen(!isSettingsOpen)} variant="ghost-dark" align="left" className={`w-full flex items-center justify-between !px-3 !py-2.5 rounded-xl transition-all duration-300 font-medium cursor-pointer !normal-case !h-auto group/settings ${activeStates.isSettingsActive ? 'text-blue-400 bg-blue-400/5' : (isSettingsOpen && !isLoading) ? 'text-white bg-white/5' : 'text-gray-400 hover:bg-white/5 hover:text-white'} ${isLoading && 'animate-pulse'}`}>
               <div className="flex-1 flex items-center gap-4">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-none ${activeStates.isSettingsActive ? 'bg-amber-500 text-white' : 'bg-amber-500 text-white group-hover/settings:scale-110'}`}><Settings size={14} /></div>
-                <Label className={`text-[13px] !capitalize ! transition-colors duration-300 ${activeStates.isSettingsActive ? 'text-blue-400 font-bold' : isSettingsOpen ? 'text-white font-semibold' : 'text-inherit'}`}>Workspace Setup</Label>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-none ${isLoading ? 'bg-slate-800' : activeStates.isSettingsActive ? 'bg-amber-500 text-white' : 'bg-amber-500 text-white group-hover/settings:scale-110'}`}>
+                  {!isLoading && <Settings size={14} />}
+                </div>
+                {isLoading ? (
+                  <div className="h-3 w-28 bg-slate-800 rounded" />
+                ) : (
+                  <Label className={`text-[13px] !capitalize ! transition-colors duration-300 ${activeStates.isSettingsActive ? 'text-blue-400 font-bold' : isSettingsOpen ? 'text-white font-semibold' : 'text-inherit'}`}>Workspace Setup</Label>
+                )}
               </div>
-              <ChevronRight size={14} className={`transition-all duration-300 ${isSettingsOpen ? 'rotate-90 text-amber-400' : activeStates.isSettingsActive ? 'text-amber-400' : 'text-gray-600 group-hover/settings:translate-x-1'}`} />
+              {!isLoading && <ChevronRight size={14} className={`transition-all duration-300 ${isSettingsOpen ? 'rotate-90 text-amber-400' : activeStates.isSettingsActive ? 'text-amber-400' : 'text-gray-600 group-hover/settings:translate-x-1'}`} />}
             </Button>
-            {isSettingsOpen && (
+            {isSettingsOpen && !isLoading && (
               <div className="space-y-4 mt-2 ml-8 pb-4">
                 {/* General Group */}
                 <div className="space-y-0.5">

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Input, Textarea, Button, H2, Subtext, Label } from '@/components/ui';
+import { Input, Textarea, Button, H2, Subtext, Label, Skeleton } from '@/components/ui';
 import { useAppStore } from '@/lib/store/useAppStore';
 import { supabase } from '@/lib/supabase';
 import { Company } from '@/lib/types';
-import { Loader2, Save, Building2, Camera } from 'lucide-react';
+import { Save, Building2, Camera, Loader2 } from 'lucide-react';
+
+
+import { CompanySettingsSkeleton } from './CompanySettingsSkeleton';
 
 // Helper for image compression
 const compressImage = (file: File, maxWidth: number = 800, quality: number = 0.8): Promise<Blob> => {

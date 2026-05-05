@@ -9,6 +9,7 @@ import {
   Upload, X, Eye, ExternalLink
 } from 'lucide-react';
 import { Modal, Toast, ToastType, H2, Subtext } from '@/components/ui';
+import { FormSkeleton } from '@/components/shared/skeletons/FormSkeleton';
 import { ActionButton } from '@/components/shared/buttons/ActionButton';
 import { jsPDF } from 'jspdf';
 import { generateTemplate1, generateTemplate5, generateTemplate6 } from '@/lib/pdf-templates';
@@ -108,6 +109,8 @@ export const PdfTemplatesSettingsView: React.FC<Props> = ({ company }) => {
   useEffect(() => {
     fetchData(true);
   }, [fetchData]);
+
+  if (loading) return <FormSkeleton />;
 
   const handleUpdateTemplate = async (docType: 'quotation' | 'invoice' | 'kwitansi', templateId: string) => {
     setIsProcessing(true);

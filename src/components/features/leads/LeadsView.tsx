@@ -23,6 +23,8 @@ import { BulkActionGroup } from '@/components/shared/filters/BulkActionGroup';
 import { ConfirmBulkDeleteModal } from '@/components/shared/modals/ConfirmBulkDeleteModal';
 import { ConfirmBulkStatusModal } from '@/components/shared/modals/ConfirmBulkStatusModal';
 import { exportToExcel, ExcelColumn } from '@/lib/utils/excelExport';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
+import { KanbanSkeleton } from '@/components/shared/kanban/KanbanSkeleton';
 
 interface Props {
   activeCompany: Company | null;
@@ -276,6 +278,10 @@ export const LeadsView: React.FC<Props> = ({
 
   if (!activeCompany) return <div className="p-8 text-center text-gray-400">Pilih workspace terlebih dahulu.</div>;
 
+
+
+  if (loadingMetadata || (leadsLoading && leads.length === 0)) return <TableSkeleton />;
+
   return (
     <div className="flex flex-col space-y-6">
       <StandardFilterBar
@@ -319,12 +325,16 @@ export const LeadsView: React.FC<Props> = ({
         />
       </StandardFilterBar>
 
-      <div className="h-[75vh] overflow-hidden">
-        {loadingMetadata || (leadsLoading && leads.length === 0) ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="h-[75vh] overflow-hidden relative">
+        {isFetchingNewPage && (
+          <div className="absolute top-0 left-0 right-0 z-10">
+            <div className="h-0.5 bg-blue-100 overflow-hidden">
+              <div className="h-full bg-blue-600 animate-progress w-1/2" />
+            </div>
           </div>
-        ) : viewMode === 'kanban' ? (
+        )}
+
+        {viewMode === 'kanban' ? (
           <LeadsKanbanView
             stages={stages}
             leadsByStatus={leadsByStatus}

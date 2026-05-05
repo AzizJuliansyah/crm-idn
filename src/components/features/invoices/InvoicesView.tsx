@@ -6,9 +6,12 @@ import { Button, H2, Subtext, Label, ComboBox, TableContainer } from '@/componen
 import { supabase } from '@/lib/supabase';
 import { Company, Invoice } from '@/lib/types';
 import {
-  Plus, Edit2, Trash2, Loader2, FileBadge,
-  FileDown, Download, FilePlus, MoreVertical, Eye
+  FileDown, Download, FilePlus, MoreVertical, Eye,
+  Plus,
+  FileBadge,
+  Trash2
 } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 import { ActionMenu } from '@/components/shared/ActionMenu';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -464,7 +467,7 @@ export const InvoicesView: React.FC<Props> = ({ company }) => {
     }
   };
 
-  if (invoicesLoading && invoices.length === 0) return <div className="flex flex-col items-center justify-center py-24 gap-4"><Loader2 className="animate-spin text-blue-600" /><Subtext className="text-[10px]  uppercase  text-gray-400">Sinkronisasi Invoice...</Subtext></div>;
+  if (invoicesLoading && invoices.length === 0) return <TableSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 text-gray-900">

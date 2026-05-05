@@ -3,11 +3,12 @@ import { Input, Button, H2, Subtext, Label, Modal, Badge, Toast, ToastType } fro
 import { supabase } from '@/lib/supabase';
 import { LeadStage, Company } from '@/lib/types';
 import {
-  Plus, Edit2, Trash2, Loader2, ArrowUp, ArrowDown, Save,
+  Plus, Edit2, Trash2, ArrowUp, ArrowDown, Save, Loader2,
   CheckCircle2, AlertTriangle, Target, X, Kanban, Zap
 } from 'lucide-react';
 import { ConfirmDeleteModal } from '@/components/shared/modals/ConfirmDeleteModal';
 import { ActionButton } from '@/components/shared/buttons/ActionButton';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 
 interface Props {
   company: Company;
@@ -131,12 +132,7 @@ export const LeadStagesSettingsView: React.FC<Props> = ({ company }) => {
     }
   };
 
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center py-24">
-      <Loader2 className="animate-spin text-blue-600 mb-4" />
-      <Subtext className="text-[10px] uppercase font-bold text-gray-400">Memuat Lead Pipeline...</Subtext>
-    </div>
-  );
+  if (loading) return <TableSkeleton hasFilterBar={false} />;
 
   return (
     <div className="flex flex-col space-y-6 max-w-4xl">

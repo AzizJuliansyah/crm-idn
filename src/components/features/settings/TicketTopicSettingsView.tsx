@@ -10,8 +10,9 @@ import { useAppStore } from '@/lib/store/useAppStore';
 import { supabase } from '@/lib/supabase';
 import { Company, TicketTopic } from '@/lib/types';
 import {
-  Plus, Edit2, Trash2, Loader2, Ticket
+  Plus, Edit2, Trash2, Ticket
 } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 
 interface Props {
   company: Company;
@@ -97,7 +98,7 @@ export const TicketTopicSettingsView: React.FC<Props> = ({ company }) => {
     }
   };
 
-  if (loading) return <div className="flex flex-col items-center justify-center py-24"><Loader2 className="animate-spin text-indigo-600 mb-4" /><Subtext className="text-[10px]  uppercase  text-gray-400">Memuat Daftar Topik...</Subtext></div>;
+  if (loading) return <TableSkeleton hasFilterBar={false} />;
 
   return (
     <div className="max-w-4xl flex flex-col space-y-6">

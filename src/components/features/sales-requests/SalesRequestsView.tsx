@@ -10,9 +10,10 @@ import {
 import { supabase } from '@/lib/supabase';
 import { Company, SalesRequest, SalesRequestCategory } from '@/lib/types';
 import {
-    Plus, FileQuestion, Loader2,
+    Plus, FileQuestion, 
     Check, Trash2, Clock, User, FileText, FileCheck, Zap, X, MoreVertical, Eye
 } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 import { ActionButton } from '@/components/shared/buttons/ActionButton';
 import { ActionMenu } from '@/components/shared/ActionMenu';
 import { ConfirmDeleteModal } from '@/components/shared/modals/ConfirmDeleteModal';
@@ -339,12 +340,10 @@ export const SalesRequestsView: React.FC<Props> = ({
         }
     ], [activeCompanyMembers, hasApprovalPermission]);
 
-    if (loading && requests.length === 0) return (
-        <div className="flex flex-col items-center justify-center py-24 gap-4 bg-white rounded-2xl border border-gray-100 min-h-[400px]">
-            <Loader2 className="animate-spin text-indigo-600" size={32} />
-            <Subtext className="text-[10px] uppercase text-gray-400">Memuat Request...</Subtext>
-        </div>
-    );
+
+
+
+    if (loading && requests.length === 0) return <TableSkeleton />;
 
     return (
         <div className="flex flex-col gap-6 text-gray-900">

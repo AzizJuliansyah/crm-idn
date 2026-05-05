@@ -3,9 +3,10 @@ import { Input, Button, H2, Subtext, Label, Modal, Badge, Toast, ToastType } fro
 import { supabase } from '@/lib/supabase';
 import { SupportStage, Company } from '@/lib/types';
 import {
-  Plus, Edit2, Trash2, Loader2, ArrowUp, ArrowDown, Save,
-  CheckCircle2, AlertTriangle, Target, X
+  Plus, Edit2, Trash2, ArrowUp, ArrowDown, Save, Loader2,
+  CheckCircle2, AlertTriangle, Target, X, Kanban, Zap
 } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 import { ConfirmDeleteModal } from '@/components/shared/modals/ConfirmDeleteModal';
 import { ActionButton } from '@/components/shared/buttons/ActionButton';
 
@@ -126,12 +127,7 @@ export const SupportPipelineSettingsView: React.FC<Props> = ({ company }) => {
     }
   };
 
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center py-24 min-h-[400px]">
-      <Loader2 className="animate-spin text-rose-600 mb-4" size={32} />
-      <Subtext className="text-[10px] uppercase font-bold text-gray-400">Memuat Support Pipeline...</Subtext>
-    </div>
-  );
+  if (loading) return <TableSkeleton hasFilterBar={false} />;
 
   return (
     <div className="flex flex-col space-y-6 max-w-4xl">

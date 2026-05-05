@@ -4,7 +4,7 @@ import React, { Suspense } from 'react';
 import { useAppStore } from '@/lib/store/useAppStore';
 import { InvoiceRequestFormView } from '@/components/features/invoices/InvoiceRequestFormView';
 import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
+import { FormSkeleton } from '@/components/shared/skeletons/FormSkeleton';
 
 export default function CreateInvoiceRequestsPage() {
   const { activeCompany: company, user } = useAppStore();
@@ -13,7 +13,7 @@ export default function CreateInvoiceRequestsPage() {
   if (!company || !user) return null;
 
   return (
-    <Suspense fallback={<div className="flex justify-center p-24"><Loader2 className="animate-spin text-indigo-600" /></div>}>
+    <Suspense fallback={<FormSkeleton />}>
       <InvoiceRequestFormView
         company={company}
         user={user}

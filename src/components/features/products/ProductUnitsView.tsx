@@ -1,6 +1,7 @@
 'use client';
 
-import { Loader2, Plus, Edit2, Trash2, X, Weight, CheckCircle as CheckCircle2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Weight, CheckCircle as CheckCircle2, Loader2 } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 
 import { Company, ProductUnit } from '@/lib/types';
 
@@ -96,7 +97,7 @@ export const ProductUnitsView: React.FC<Props> = ({ company }) => {
     }
   };
 
-  if (loading) return <div className="flex flex-col items-center justify-center py-24"><Loader2 className="animate-spin text-emerald-600 mb-4" /><Subtext className="text-[10px]  uppercase  text-gray-400">Memuat Satuan...</Subtext></div>;
+  if (loading) return <TableSkeleton hasFilterBar={false} />;
   if (!company) return <div className="text-center p-8 text-gray-500">Pilih workspace terlebih dahulu</div>;
 
   return (

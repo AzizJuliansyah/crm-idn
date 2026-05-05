@@ -5,7 +5,7 @@ import { useAppStore } from '@/lib/store/useAppStore';
 import { TeamMembersView } from '@/components/features/admin/TeamMembersView';
 import { supabase } from '@/lib/supabase';
 import { CompanyMember, CompanyRole } from '@/lib/types';
-import { Loader2 } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 
 export default function TeamPage() {
     const { activeCompany, user, showToast } = useAppStore();
@@ -40,14 +40,10 @@ export default function TeamPage() {
     }, [activeCompany, fetchData]);
 
     if (!user) return null;
-    if (!activeCompany) return <div className="p-8 text-center text-gray-500">Pilih workspace terlebih dahulu.</div>;
+    if (!activeCompany) return <TableSkeleton />;
 
     if (loading) {
-        return (
-            <div className="flex h-full items-center justify-center py-24">
-                <Loader2 className="animate-spin text-blue-600" size={32} />
-            </div>
-        );
+        return <TableSkeleton />;
     }
 
     return <TeamMembersView company={activeCompany} members={members} roles={roles} user={user} onUpdate={() => fetchData(false)} />;

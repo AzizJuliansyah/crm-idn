@@ -77,15 +77,18 @@ export const TableEmpty: React.FC<{ colSpan: number; message?: string; icon?: Re
   </tr>
 );
 
-export const TableLoading: React.FC<{ colSpan: number }> = ({ colSpan }) => (
-  <tr>
-    <td colSpan={colSpan} className="py-8 text-center">
-      <div className="flex justify-center flex-col items-center gap-2">
-        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-        <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Memuat...</span>
-      </div>
-    </td>
-  </tr>
+export const TableLoading: React.FC<{ colSpan: number; rows?: number }> = ({ colSpan, rows = 5 }) => (
+  <>
+    {Array.from({ length: rows }).map((_, i) => (
+      <tr key={i} className="animate-pulse border-b border-gray-50 last:border-0">
+        {Array.from({ length: colSpan }).map((_, j) => (
+          <td key={j} className="px-4 py-4">
+            <div className={`h-4 bg-gray-100 rounded-md ${j === 0 ? 'w-32' : 'w-24'}`} />
+          </td>
+        ))}
+      </tr>
+    ))}
+  </>
 );
 
 export const InfiniteScrollSentinel: React.FC<{
@@ -117,11 +120,10 @@ export const InfiniteScrollSentinel: React.FC<{
   if (colSpan !== undefined) {
     return (
       <tr ref={sentinelRef}>
-        <td colSpan={colSpan} className="py-8">
+        <td colSpan={colSpan} className="py-4">
           {isLoading && (
-            <div className="flex justify-center flex-col items-center gap-2">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-              <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Memuat Lebih Banyak...</span>
+            <div className="flex flex-col gap-4 animate-pulse">
+              <div className="h-4 bg-gray-100 rounded-md w-full" />
             </div>
           )}
         </td>
@@ -130,12 +132,11 @@ export const InfiniteScrollSentinel: React.FC<{
   }
 
   return (
-    <div ref={sentinelRef} className="py-8 w-full flex justify-center flex-col items-center gap-2">
+    <div ref={sentinelRef} className="py-4 w-full">
       {isLoading && (
-        <>
-          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-          <span className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Memuat Lebih Banyak...</span>
-        </>
+        <div className="flex flex-col gap-4 animate-pulse">
+           <div className="h-20 bg-gray-50 rounded-xl w-full" />
+        </div>
       )}
     </div>
   );

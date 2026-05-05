@@ -14,6 +14,7 @@ interface WorkspaceSelectorProps {
   platformSettings: PlatformSettings;
   isAdmin: boolean;
   onLogout: () => void;
+  isLoading?: boolean;
 }
 
 export const WorkspaceSelector: React.FC<WorkspaceSelectorProps> = ({
@@ -22,7 +23,8 @@ export const WorkspaceSelector: React.FC<WorkspaceSelectorProps> = ({
   switchCompany,
   platformSettings,
   isAdmin,
-  onLogout
+  onLogout,
+  isLoading
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -48,30 +50,38 @@ export const WorkspaceSelector: React.FC<WorkspaceSelectorProps> = ({
     <div className="p-4" ref={dropdownRef}>
       <div className="relative">
         <Button
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          onClick={() => !isLoading && setIsDropdownOpen(!isDropdownOpen)}
           variant="ghost-dark"
           align="left" size='sm'
-          className={`w-full group flex items-center gap-3 p-3 rounded-2xl transition-all duration-300 border-2 cursor-pointer !normal-case ! ${isDropdownOpen ? 'bg-slate-800 border-slate-600 shadow-none' : (!activeCompany && isAdmin) ? 'bg-gray-900 border-gray-800 hover:border-gray-700' : 'bg-slate-800/40 border-slate-800 hover:border-slate-700 hover:bg-white/5 shadow-none'}`}
+          className={`w-full group flex items-center gap-3 p-3 rounded-2xl transition-all duration-300 border-2 ${isLoading ? 'cursor-default border-slate-800' : 'cursor-pointer'} !normal-case ! ${isDropdownOpen ? 'bg-slate-800 border-slate-600 shadow-none' : (!activeCompany && isAdmin) ? 'bg-gray-900 border-gray-800 hover:border-gray-700' : 'bg-slate-800/40 border-slate-800 hover:border-slate-700 hover:bg-white/5 shadow-none'}`}
         >
           <div className="relative">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-medium text-xs shadow-none transition-transform group-hover:scale-105 duration-300 overflow-hidden ${(!activeCompany && isAdmin) ? 'bg-blue-600' : 'bg-slate-800'}`}>
-              {(!activeCompany && isAdmin) ? (
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-medium text-xs shadow-none transition-transform ${!isLoading && 'group-hover:scale-105'} duration-300 overflow-hidden ${(!activeCompany && isAdmin) ? 'bg-blue-600' : 'bg-slate-800'} ${isLoading && 'animate-pulse'}`}>
+              {isLoading ? (
+                <div className="w-full h-full bg-slate-700" />
+              ) : (!activeCompany && isAdmin) ? (
                 platformSettings.logo_url ? <img src={platformSettings.logo_url} className="w-full h-full object-cover" alt="Logo" /> : <Command size={20} />
               ) : (
                 activeCompany?.logo_url ? <img src={activeCompany.logo_url} className="w-full h-full object-cover" alt="Logo" /> : (activeCompany?.name.charAt(0) || 'C')
               )}
             </div>
-            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-white rounded-full flex items-center justify-center border-2 border-gray-100 shadow-none">
-              <ArrowUpDown size={8} className="text-gray-400" />
-            </div>
+            {!isLoading && (
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-white rounded-full flex items-center justify-center border-2 border-gray-100 shadow-none">
+                <ArrowUpDown size={8} className="text-gray-400" />
+              </div>
+            )}
           </div>
           <div className="flex-1 text-left overflow-hidden">
             <div className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider mb-0.5">Workspace</div>
-            <div className="text-[13px] font-bold text-white truncate !capitalize">
-              {(!activeCompany && isAdmin) ? 'Platform Central' : (activeCompany?.name || 'Pilih Tim')}
-            </div>
+            {isLoading ? (
+              <div className="h-4 w-24 bg-slate-700 rounded animate-pulse mt-1" />
+            ) : (
+              <div className="text-[13px] font-bold text-white truncate !capitalize">
+                {(!activeCompany && isAdmin) ? 'Platform Central' : (activeCompany?.name || 'Pilih Tim')}
+              </div>
+            )}
           </div>
-          <ChevronDown size={14} className={`text-gray-500 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+          {!isLoading && <ChevronDown size={14} className={`text-gray-500 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />}
         </Button>
 
         {isDropdownOpen && (

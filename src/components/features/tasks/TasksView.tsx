@@ -17,8 +17,8 @@ import {
   Table as TableIcon, 
   ArrowLeft, 
   AlignLeft,
-  Loader2,
 } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 import { useRouter } from 'next/navigation';
 
 import { ConfirmDeleteModal } from '@/components/shared/modals/ConfirmDeleteModal';
@@ -214,12 +214,10 @@ export const TasksView: React.FC<Props> = ({ company, user, members, projectId }
     }
   };
 
-  if (loadingMetadata || (tasksLoading && tasks.length === 0)) return (
-    <div className="flex flex-col items-center justify-center py-24 min-h-[400px]">
-      <Loader2 className="animate-spin text-emerald-600 mb-4" size={32} />
-      <Subtext className="!text-[10px] uppercase text-gray-400 font-bold">Sinkronisasi Task Proyek...</Subtext>
-    </div>
-  );
+
+
+
+  if (loadingMetadata || (tasksLoading && tasks.length === 0)) return <TableSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 text-gray-900">

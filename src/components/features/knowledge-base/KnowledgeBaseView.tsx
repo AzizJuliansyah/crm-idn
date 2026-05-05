@@ -31,6 +31,7 @@ import { ActionButton } from '@/components/shared/buttons/ActionButton';
 import { StandardFilterBar } from '@/components/shared/filters/StandardFilterBar';
 import { BulkActionGroup } from '@/components/shared/filters/BulkActionGroup';
 import { BaseDataTable, ColumnConfig } from '@/components/shared/tables/BaseDataTable';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 
 interface Props {
   activeCompany: Company;
@@ -237,13 +238,7 @@ export const KnowledgeBaseView: React.FC<Props> = ({ activeCompany: company }) =
     }
   ], []);
 
-
-  if (loadingArticles && articles.length === 0) return (
-    <div className="flex flex-col items-center justify-center py-24 bg-white rounded-2xl border border-gray-100 min-h-[400px]">
-      <LoaderIcon className="animate-spin text-blue-600 mb-4" size={32} />
-      <Subtext className="text-[10px] uppercase text-gray-400">Sinkronisasi Artikel...</Subtext>
-    </div>
-  );
+  if (loadingArticles && articles.length === 0) return <TableSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 text-gray-900">

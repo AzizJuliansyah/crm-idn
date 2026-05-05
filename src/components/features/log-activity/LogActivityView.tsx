@@ -10,6 +10,7 @@ import { ActivityHeader } from './components/ActivityHeader';
 import { ActivityMetrics } from './components/ActivityMetrics';
 import { ActivitySummaryChart } from './components/ActivitySummaryChart';
 import { ActivityTimeline } from './components/ActivityTimeline';
+import { LogActivitySkeleton } from './components/LogActivitySkeleton';
 
 interface Props {
     user: Profile;
@@ -305,6 +306,11 @@ export const LogActivityView: React.FC<Props> = ({ user, companyId }) => {
         return result;
     }, [metricsActivities, leadsData, quotations, chartDateRange, selectedMetrics]);
 
+
+
+
+
+    if (isLoadingMetadata && timelineActivities.length === 0) return <LogActivitySkeleton />;
 
     return (
         <div className="flex flex-col space-y-8 pb-20">

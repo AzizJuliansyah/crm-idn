@@ -3,11 +3,12 @@ import { Input, Button, Table, TableHeader, TableBody, TableRow, TableCell, Tabl
 import { supabase } from '@/lib/supabase';
 import { Company, LeadSource } from '@/lib/types';
 import {
-  Plus, Search, Edit2, Trash2, Loader2, Globe,
+  Plus, Search, Edit2, Trash2, Globe,
   Save, AlertTriangle, List, CheckCircle2, X, ArrowUp, ArrowDown
 } from 'lucide-react';
 import { ConfirmDeleteModal } from '@/components/shared/modals/ConfirmDeleteModal';
 import { ActionButton } from '@/components/shared/buttons/ActionButton';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 // Removed legacy NotificationModal import
 
 interface Props {
@@ -109,12 +110,7 @@ export const LeadSourcesSettingsView: React.FC<Props> = ({ company }) => {
     }
   };
 
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center py-24">
-      <Loader2 className="animate-spin text-blue-600 mb-4" />
-      <Subtext className="text-[10px]  uppercase  text-gray-400">Memuat Sumber Leads...</Subtext>
-    </div>
-  );
+  if (loading) return <TableSkeleton hasFilterBar={false} />;
 
   return (
     <div className="max-w-4xl flex flex-col space-y-6">

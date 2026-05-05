@@ -5,7 +5,7 @@
 }
 
 :root {
-  --background: #ffffff;
+  --background: #f9fafb;
   --foreground: #111827;
 }
 
@@ -48,4 +48,12 @@ body {
   &::-webkit-scrollbar-thumb:hover {
     background: #d1d5db;
   }
+}
+@keyframes progress {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-progress {
+  animation: progress 1.5s infinite ease-in-out;
 }

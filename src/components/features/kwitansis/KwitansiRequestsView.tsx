@@ -25,6 +25,7 @@ import { useKwitansiRequestFilters } from '@/lib/hooks/useKwitansiRequestFilters
 import { KwitansiRequestFilterBar } from './KwitansiRequestFilterBar';
 import { StandardFilterBar } from '@/components/shared/filters/StandardFilterBar';
 import { BulkActionGroup } from '@/components/shared/filters/BulkActionGroup';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 
 interface Props {
     company: Company;
@@ -61,6 +62,8 @@ export const KwitansiRequestsView: React.FC<Props> = ({ company }) => {
 
     const requests = requestsData?.data || [];
     const totalCount = requestsData?.totalCount || 0;
+
+
 
     useEffect(() => {
         const success = searchParams.get('success');
@@ -416,6 +419,9 @@ export const KwitansiRequestsView: React.FC<Props> = ({ company }) => {
             )
         }
     ], [activeCompanyMembers, hasApprovalPermission, handleDownloadKwitansi, handleUpdateStatus, handleCreateKwitansi]);
+
+
+    if (loading && requests.length === 0) return <TableSkeleton />;
 
     return (
         <div className="flex flex-col gap-6 text-gray-900">

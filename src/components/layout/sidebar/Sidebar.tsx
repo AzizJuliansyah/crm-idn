@@ -16,7 +16,7 @@ interface SidebarProps {
   switchCompany: (company: Company | null) => void;
   platformSettings: PlatformSettings;
   isAdmin: boolean;
-  user: Profile;
+  user: Profile | null;
   currentRoleName: string;
   onLogout: () => void;
   activeView: string;
@@ -43,6 +43,7 @@ interface SidebarProps {
     isSettingsOpen: boolean;
     setIsSettingsOpen: (open: boolean) => void;
   };
+  isLoading?: boolean;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -62,7 +63,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   pipelines,
   projectPipelines,
   salesRequestCategories,
-  menuStates
+  menuStates,
+  isLoading
 }) => {
   return (
     <>
@@ -87,6 +89,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           platformSettings={platformSettings}
           isAdmin={isAdmin}
           onLogout={onLogout}
+          isLoading={isLoading}
         />
 
         {isAdmin && !activeCompany ? (
@@ -99,6 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             projectPipelines={projectPipelines}
             salesRequestCategories={salesRequestCategories}
             setIsSidebarOpen={setIsSidebarOpen}
+            isLoading={isLoading}
             {...menuStates}
           />
         )}

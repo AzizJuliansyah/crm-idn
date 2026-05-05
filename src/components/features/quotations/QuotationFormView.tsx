@@ -9,6 +9,7 @@ import {
   Building, Mail, Phone, Search, FileDown, Layers, Check as CheckIcon,
   DollarSign, FileCheck
 } from 'lucide-react';
+import { FormSkeleton } from '@/components/shared/skeletons/FormSkeleton';
 import { Modal, Button, Input, Breadcrumb, SectionHeader, Card, Label, Textarea, Table, TableHeader, TableBody, TableRow, TableCell, ComboBox, Subtext, H2 } from '@/components/ui';
 import { ClientFormModal } from '@/components/features/clients/components/ClientFormModal';
 import { DocumentItemsTable, DocumentItemRow } from '@/components/shared/forms/DocumentItemsTable';
@@ -441,7 +442,7 @@ export const QuotationFormView: React.FC<Props> = ({ company, editingId, initial
     return data;
   };
 
-  if (loading && !items.length) return <div className="flex flex-col items-center justify-center py-24 gap-4 bg-white min-h-screen"><Loader2 className="animate-spin text-blue-600" size={32} /><Subtext className="text-[10px] uppercase  text-gray-400">Menyiapkan Formulir...</Subtext></div>;
+  if (loading && !items.length) return <FormSkeleton />;
 
   return (
     <div className="bg-[#F9FAFB] min-h-screen pb-24 font-sans relative">

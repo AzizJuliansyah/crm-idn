@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { Lead, LeadStage, LeadSource, CompanyMember, ClientCompany, ClientCompanyCategory } from '@/lib/types';
 
@@ -86,6 +86,7 @@ export function useLeadsQuery({
         totalCount: count || 0,
       };
     },
+    placeholderData: keepPreviousData,
     initialData: (!searchTerm && (!statusFilter || statusFilter === 'all') && (!assigneeFilter || assigneeFilter === 'all') && (!companyFilter || companyFilter === 'all') && (!dateFilterType || dateFilterType === 'all') && !sortConfig && page === 1) ? initialData : undefined,
     enabled: !!companyId,
   });

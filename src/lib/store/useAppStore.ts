@@ -182,7 +182,6 @@ export const useAppStore = create<AppState>((set, get) => ({
     document.cookie = 'crm_active_company_id=; path=/; max-age=0';
     set({ activeCompany: null, user: null, companies: [], activeCompanyMembers: [], kbChatMessages: [] });
     await supabase.auth.signOut();
-    set({ isLoggingOut: false });
     window.location.replace('/login');
   },
 }));

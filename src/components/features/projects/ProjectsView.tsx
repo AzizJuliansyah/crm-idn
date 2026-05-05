@@ -23,6 +23,7 @@ import { ProjectFormModal } from './ProjectFormModal';
 import { ProjectsTableView } from './ProjectsTableView';
 import { ProjectsKanbanView } from './ProjectsKanbanView';
 import { ProjectFilterBar } from './ProjectFilterBar';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 import { exportToExcel, ExcelColumn } from '@/lib/utils/excelExport';
 
 interface Props {
@@ -205,12 +206,10 @@ export const ProjectsView: React.FC<Props> = ({ company, user, members: initialM
     showToast('Data Proyek berhasil diekspor ke Excel', 'success');
   };
 
-  if (loadingMetadata || (loadingProjects && projects.length === 0)) return (
-    <div className="flex flex-col items-center justify-center py-24 min-h-[400px]">
-      <Loader2 className="animate-spin text-emerald-600 mb-4" size={32} />
-      <Subtext className="text-[10px] uppercase text-gray-400">Sinkronisasi Proyek...</Subtext>
-    </div>
-  );
+
+
+
+  if (loadingMetadata || (loadingProjects && projects.length === 0)) return <TableSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 text-gray-900">

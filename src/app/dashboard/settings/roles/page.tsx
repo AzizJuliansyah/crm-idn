@@ -5,7 +5,7 @@ import { useAppStore } from '@/lib/store/useAppStore';
 import { RolesManagementView } from '@/components/features/admin/RolesManagementView';
 import { supabase } from '@/lib/supabase';
 import { CompanyRole } from '@/lib/types';
-import { Loader2 } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 
 export default function RolesPage() {
   const { activeCompany, showToast } = useAppStore();
@@ -32,14 +32,10 @@ export default function RolesPage() {
     }
   }, [activeCompany, fetchData]);
 
-  if (!activeCompany) return <div className="p-8 text-center text-gray-500">Pilih workspace terlebih dahulu.</div>;
+  if (!activeCompany) return <TableSkeleton />;
 
   if (loading) {
-    return (
-      <div className="flex h-full items-center justify-center py-24">
-        <Loader2 className="animate-spin text-blue-600" size={32} />
-      </div>
-    );
+    return <TableSkeleton />;
   }
 
   return <RolesManagementView company={activeCompany} roles={roles} onUpdate={() => fetchData(false)} />;

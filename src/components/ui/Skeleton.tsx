@@ -4,12 +4,14 @@ interface SkeletonProps {
   className?: string;
   variant?: 'text' | 'circular' | 'rectangular';
   animation?: 'pulse' | 'wave';
+  style?: React.CSSProperties;
 }
 
 export const Skeleton: React.FC<SkeletonProps> = ({
   className = '',
   variant = 'rectangular',
   animation = 'pulse',
+  style,
 }) => {
   const variantClasses = {
     text: 'h-4 w-full rounded',
@@ -25,6 +27,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   return (
     <div 
       className={`bg-gray-200 ${variantClasses[variant]} ${animationClasses[animation]} ${className}`}
+      style={style}
     />
   );
 };

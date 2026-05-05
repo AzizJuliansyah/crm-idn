@@ -8,6 +8,7 @@ import {
     Loader2, Plus, GripVertical,
     Tags, ArrowUp, ArrowDown, Edit2, Trash2, Save, Zap
 } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 import { ActionButton } from '@/components/shared/buttons/ActionButton';
 import { ConfirmDeleteModal } from '@/components/shared/modals/ConfirmDeleteModal';
 
@@ -159,7 +160,7 @@ export const SalesRequestCategoriesSettingsView: React.FC<Props> = ({ company })
         }
     };
 
-    if (loading) return <div className="flex flex-col items-center justify-center py-24"><Loader2 className="animate-spin text-blue-600" /></div>;
+    if (loading) return <TableSkeleton hasFilterBar={false} />;
 
     return (
         <div className="max-w-4xl flex flex-col space-y-6">

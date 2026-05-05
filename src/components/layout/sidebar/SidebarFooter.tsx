@@ -8,7 +8,7 @@ import { Profile } from '@/lib/types';
 import { getPathFromViewId } from '@/lib/navigation';
 
 interface SidebarFooterProps {
-  user: Profile;
+  user: Profile | null;
   currentRoleName: string;
   onLogout: () => void;
   setIsSidebarOpen: (open: boolean) => void;
@@ -32,11 +32,24 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({
         onClick={() => setIsSidebarOpen(false)}
       >
         <div className="w-10 h-10 rounded-xl bg-slate-800 border-2 border-slate-700 flex items-center justify-center text-slate-500 overflow-hidden shrink-0 shadow-none group-hover:border-blue-500/50 transition-colors">
-          {user.avatar_url ? <img src={user.avatar_url} className="w-full h-full object-cover" alt="Avatar" /> : <User size={20} />}
+          {user ? (
+             user.avatar_url ? <img src={user.avatar_url} className="w-full h-full object-cover" alt="Avatar" /> : <User size={20} />
+          ) : (
+            <div className="w-full h-full bg-slate-700 animate-pulse" />
+          )}
         </div>
-        <div className="overflow-hidden">
-          <Subtext className="text-[11px] font-semibold text-gray-100 truncate ">{user.full_name}</Subtext>
-          <Subtext className="text-[9px] text-gray-500 font-medium !capitalize ! truncate">{currentRoleName}</Subtext>
+        <div className="overflow-hidden flex-1">
+          {user ? (
+            <>
+              <Subtext className="text-[11px] font-semibold text-gray-100 truncate ">{user.full_name}</Subtext>
+              <Subtext className="text-[9px] text-gray-500 font-medium !capitalize ! truncate">{currentRoleName}</Subtext>
+            </>
+          ) : (
+            <div className="space-y-1.5">
+              <div className="h-2 w-20 bg-slate-700 rounded animate-pulse" />
+              <div className="h-2 w-12 bg-slate-800 rounded animate-pulse" />
+            </div>
+          )}
         </div>
       </Link>
       <Button 

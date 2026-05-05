@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery, keepPreviousData } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { Deal, Pipeline, PipelineStage, CompanyMember, Client, ClientCompany, ClientCompanyCategory } from '@/lib/types';
 
@@ -113,6 +113,7 @@ export function useDealsQuery({
     },
     initialData: (!searchTerm && (!statusFilter || statusFilter === 'all') && (!assigneeFilter || assigneeFilter === 'all') && (!companyFilter || companyFilter === 'all') && (!probabilityFilter || probabilityFilter === 'all') && (!dateFilterType || dateFilterType === 'all') && (!followUpFilter || followUpFilter === 'all') && !sortConfig && page === 1) ? initialData : undefined,
     enabled: !!companyId && !!pipelineId,
+    placeholderData: keepPreviousData,
   });
 }
 

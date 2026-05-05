@@ -25,6 +25,8 @@ import { ConfirmBulkDeleteModal } from '@/components/shared/modals/ConfirmBulkDe
 import { ConfirmBulkStatusModal } from '@/components/shared/modals/ConfirmBulkStatusModal';
 import { BulkActionGroup } from '@/components/shared/filters/BulkActionGroup';
 import { exportToExcel, ExcelColumn } from '@/lib/utils/excelExport';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
+import { KanbanSkeleton } from '@/components/shared/kanban/KanbanSkeleton';
 
 interface Props {
   activeCompany: Company | null;
@@ -251,6 +253,10 @@ export const DealsView: React.FC<Props> = ({
 
   if (!activeCompany) return <div className="p-8 text-center text-gray-400">Pilih workspace terlebih dahulu.</div>;
 
+
+
+  if (loadingMetadata || (loadingDeals && deals.length === 0)) return <TableSkeleton />;
+
   return (
     <div className="flex flex-col space-y-6">
       <StandardFilterBar
@@ -259,7 +265,7 @@ export const DealsView: React.FC<Props> = ({
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         onExport={handleExportDeals}
-        searchPlaceholder="Cari deal, klien..."
+        searchPlaceholder="Cari nama deal, klien..."
         viewModes={{
           current: viewMode,
           onChange: (mode) => setViewMode(mode as 'kanban' | 'table'),
@@ -269,7 +275,7 @@ export const DealsView: React.FC<Props> = ({
           ]
         }}
         primaryAction={{
-          label: "Buat Deal",
+          label: "Tambah Deal",
           onClick: () => setIsAddModalOpen(true),
           icon: <Plus size={14} strokeWidth={3} />
         }}
@@ -298,11 +304,15 @@ export const DealsView: React.FC<Props> = ({
       </StandardFilterBar>
 
       <div className="h-[75vh] mb-4 overflow-hidden relative">
-        {loadingMetadata || (loadingDeals && deals.length === 0) ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        {isFetchingNewPage && (
+          <div className="absolute top-0 left-0 right-0 z-10">
+            <div className="h-0.5 bg-blue-100 overflow-hidden">
+              <div className="h-full bg-blue-600 animate-progress w-1/2" />
+            </div>
           </div>
-        ) : viewMode === 'kanban' ? (
+        )}
+
+        {viewMode === 'kanban' ? (
           <DealsKanbanView
             pipeline={pipeline} dealsByStage={dealsByStage} onEdit={setSelectedDeal} onDelete={(id, e) => handleDelete(id)}
             onReorder={onDrop} onCreateQuotation={handleCreateQuotation} onEditQuotation={handleEditQuotation}

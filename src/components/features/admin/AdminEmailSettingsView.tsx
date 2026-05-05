@@ -9,6 +9,8 @@ import {
 } from '@/components/ui';
 import { PlatformSettings } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
+import { Skeleton } from '@/components/ui';
+import { AdminEmailSettingsSkeleton } from '@/components/shared/skeletons/AdminSettingsSkeleton';
 
 interface AdminEmailSettingsViewProps {
   initialSettings: PlatformSettings | null;

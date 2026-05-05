@@ -230,7 +230,8 @@ export const LeadsTableView: React.FC<Props> = ({
       
       emptyMessage="Tidak ada lead yang ditemukan"
       emptyIcon={<Users size={48} className="mx-auto opacity-10 text-gray-400" />}
-      rowClassName={(lead) => lead.is_urgent ? '!border-l-4 !border-l-amber-400 !bg-amber-50/50' : ''}
+      rowClassName={(lead) => lead.is_urgent ? '!border-l-amber-400 !bg-amber-50/50' : ''}
+      headerRowClassName="border-l-4 border-l-[#081526]"
     />
   );
 };

@@ -3,7 +3,8 @@ import { Input, Button, H2, H3, Subtext, Label, Modal, Toast, ToastType } from '
 
 import { supabase } from '@/lib/supabase';
 import { Company, CompanyEmailSetting } from '@/lib/types';
-import { Loader2, Save, Mail, Check, AlertTriangle } from 'lucide-react';
+import { Save, Mail, Check, AlertTriangle, Loader2 } from 'lucide-react';
+import { ViewSkeleton } from '@/components/shared/skeletons/ViewSkeleton';
 
 interface Props {
   company: Company;
@@ -86,7 +87,7 @@ export const EmailSettingsView: React.FC<Props> = ({ company }) => {
     }
   };
 
-  if (loading) return <div className="flex flex-col items-center justify-center py-24"><Loader2 className="animate-spin text-indigo-600 mb-4" /><Subtext className="text-[10px]  uppercase  text-gray-400">Memuat Konfigurasi Email...</Subtext></div>;
+  if (loading) return <ViewSkeleton />;
 
   return (
     <div className="max-w-3xl flex flex-col gap-6">

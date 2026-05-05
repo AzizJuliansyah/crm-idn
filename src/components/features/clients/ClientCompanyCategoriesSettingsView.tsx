@@ -14,6 +14,7 @@ import {
 
 import { ConfirmDeleteModal } from '@/components/shared/modals/ConfirmDeleteModal';
 import { ActionButton } from '@/components/shared/buttons/ActionButton';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 // Removed legacy NotificationModal import
 import { ClientCompanyCategoryFormModal } from './components/ClientCompanyCategoryFormModal';
 
@@ -116,7 +117,7 @@ export const ClientCompanyCategoriesSettingsView: React.FC<Props> = ({ company }
     }
   };
 
-  if (loading) return <div className="flex flex-col items-center justify-center py-24"><Loader2 className="animate-spin text-blue-600 mb-4" /><Subtext className="text-[10px]  uppercase  text-gray-400">Memuat Kategori...</Subtext></div>;
+  if (loading) return <TableSkeleton hasFilterBar={false} />;
 
   return (
     <div className="max-w-4xl flex flex-col space-y-6">

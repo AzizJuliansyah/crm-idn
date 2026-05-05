@@ -7,6 +7,7 @@ import {
   ArrowLeft, Save, Plus, Trash2, FileBadge,
   User, CheckCircle2, X, FileText, FileDown, DollarSign, FilePlus, Loader2
 } from 'lucide-react';
+import { FormSkeleton } from '@/components/shared/skeletons/FormSkeleton';
 import { Button, Input, Textarea, SectionHeader, Label, Subtext, ComboBox, Card } from '@/components/ui';
 import { ClientFormModal } from '@/components/features/clients/components/ClientFormModal';
 import { DocumentItemsTable, DocumentItemRow } from '@/components/shared/forms/DocumentItemsTable';
@@ -628,7 +629,7 @@ export const InvoiceFormView: React.FC<Props> = ({ company, editingId, initialCl
   };
 
 
-  if (loading && !items.length) return <div className="flex flex-col items-center justify-center py-24 gap-4 bg-white min-h-screen font-sans"><Loader2 className="animate-spin text-indigo-600" size={32} /><p className="text-[10px] font-bold uppercase  text-gray-400">Menyiapkan Invoice...</p></div>;
+  if (loading && !items.length) return <FormSkeleton />;
 
   return (
     <div className="bg-[#F9FAFB] min-h-screen pb-24 font-sans relative">

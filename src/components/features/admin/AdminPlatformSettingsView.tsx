@@ -9,6 +9,8 @@ import {
 } from '@/components/ui';
 import { PlatformSettings } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
+import { Skeleton } from '@/components/ui';
+import { AdminPlatformSettingsSkeleton } from '@/components/shared/skeletons/AdminSettingsSkeleton';
 
 interface AdminPlatformSettingsViewProps {
   initialSettings: PlatformSettings | null;

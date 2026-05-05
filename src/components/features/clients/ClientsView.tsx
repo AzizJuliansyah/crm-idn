@@ -22,6 +22,7 @@ import { ClientsTableView } from './ClientsTableView';
 import { ClientFilterBar } from './ClientFilterBar';
 import { StandardFilterBar } from '@/components/shared/filters/StandardFilterBar';
 import { BulkActionGroup } from '@/components/shared/filters/BulkActionGroup';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 
 interface Props {
   company: Company;
@@ -139,12 +140,10 @@ export const ClientsView: React.FC<Props> = ({
     setIsModalOpen(true);
   };
 
-  if ((loadingClients && clients.length === 0) || loadingMetadata) return (
-    <div className="flex flex-col items-center justify-center py-24 bg-white rounded-2xl border-2 border-gray-300 shadow-none min-h-[400px]">
-      <Loader2 className="animate-spin text-emerald-600 mb-4" size={32} />
-      <Subtext className="text-[10px] uppercase text-gray-400">Mensinkronisasi Data Client...</Subtext>
-    </div>
-  );
+
+
+
+  if ((loadingClients && clients.length === 0) || loadingMetadata) return <TableSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 text-gray-900">

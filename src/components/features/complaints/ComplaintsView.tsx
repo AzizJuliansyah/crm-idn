@@ -25,6 +25,7 @@ import { StandardFilterBar } from '@/components/shared/filters/StandardFilterBar
 import { BulkActionGroup } from '@/components/shared/filters/BulkActionGroup';
 import { SupportTicketFilterBar } from '../support/SupportTicketFilterBar';
 import { exportToExcel, ExcelColumn } from '@/lib/utils/excelExport';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 
 interface Props {
   activeCompany: Company;
@@ -267,12 +268,10 @@ export const ComplaintsView: React.FC<Props> = ({
     return groups;
   }, [tickets, stages]);
 
-  if (ticketsLoading && tickets.length === 0) return (
-    <div className="flex flex-col items-center justify-center py-24 bg-white rounded-2xl border border-gray-100 min-h-[400px]">
-      <LoaderIcon className="animate-spin text-rose-600 mb-4" size={32} />
-      <Subtext className="text-[10px]  uppercase  text-gray-400">Sinkronisasi Customer Complaints...</Subtext>
-    </div>
-  );
+
+
+
+  if (ticketsLoading && tickets.length === 0) return <TableSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 text-gray-900">

@@ -10,8 +10,9 @@ import { ConfirmDeleteModal } from '@/components/shared/modals/ConfirmDeleteModa
 import { supabase } from '@/lib/supabase';
 import { Company, TaxSetting } from '@/lib/types';
 import {
-  Plus, Edit2, Trash2, Loader2, Coins, CheckCircle2
+  Plus, Edit2, Trash2, Coins, CheckCircle2
 } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 
 interface Props {
   company: Company;
@@ -116,7 +117,7 @@ export const TaxSettingsView: React.FC<Props> = ({ company }) => {
     }
   };
 
-  if (loading) return <div className="flex flex-col items-center justify-center py-24"><Loader2 className="animate-spin text-indigo-600 mb-4" /><Subtext className="text-[10px]  uppercase  text-gray-400">Memuat Daftar Pajak...</Subtext></div>;
+  if (loading) return <TableSkeleton hasFilterBar={false} />;
 
   return (
     <div className="max-w-4xl flex flex-col space-y-6">

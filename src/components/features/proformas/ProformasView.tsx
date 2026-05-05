@@ -6,10 +6,11 @@ import { Button, H2, Subtext, Label, Modal, Badge, ToastType } from '@/component
 import { supabase } from '@/lib/supabase';
 import { Company, ProformaInvoice, SalesRequestCategory } from '@/lib/types';
 import {
-  Plus, Edit2, Trash2, Loader2, FileCheck,
+  Plus, Edit2, Trash2, FileCheck,
   FileDown, FileText, FilePlus,
   Clock, MoreVertical, Eye
 } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 import { ActionMenu } from '@/components/shared/ActionMenu';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -456,7 +457,10 @@ export const ProformasView: React.FC<Props> = ({ company }) => {
     }
   ], [handleDownloadPDF, router]);
 
-  if (loadingMetadata || (proformasLoading && proformas.length === 0)) return <div className="flex flex-col items-center justify-center py-24 gap-4"><Loader2 className="animate-spin text-blue-600" /><Subtext className="text-[10px]  uppercase  text-gray-400">Sinkronisasi Proforma...</Subtext></div>;
+
+
+
+  if (loadingMetadata || (proformasLoading && proformas.length === 0)) return <TableSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 text-gray-900">

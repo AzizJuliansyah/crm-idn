@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Plus, Loader2, FileCheck, FileText, FilePlus, Clock, FileDown, Edit2, Trash2, MoreVertical, Eye } from 'lucide-react';
+import { Plus, FileCheck, FileText, FilePlus, Clock, FileDown, Edit2, Trash2, MoreVertical, Eye } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 import { ActionMenu } from '@/components/shared/ActionMenu';
 
 import { 
@@ -317,14 +318,10 @@ export const QuotationsView: React.FC<Props> = ({ company }) => {
     }
   ], [company, router]);
 
-  if (loadingMetadata || (quotationsLoading && quotations.length === 0)) {
-    return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <Loader2 className="animate-spin text-blue-600" />
-        <Subtext className="text-[10px] uppercase text-gray-400">Sinkronisasi Penawaran...</Subtext>
-      </div>
-    );
-  }
+
+
+
+  if (loadingMetadata || (quotationsLoading && quotations.length === 0)) return <TableSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 text-gray-900">

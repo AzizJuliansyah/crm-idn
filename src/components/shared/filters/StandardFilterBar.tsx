@@ -110,20 +110,23 @@ export const StandardFilterBar: React.FC<StandardFilterBarProps> = ({
 
         <div className="flex items-center gap-3">
           {viewModes && viewModes.options.length > 0 && (
-            <div className="flex items-center gap-1 bg-gray-50 border-2 border-gray-300 rounded-lg p-1 shrink-0">
+            <div className="flex items-center gap-1 bg-gray-100/80 border border-gray-200 rounded-xl p-1 shrink-0 shadow-inner">
               {viewModes.options.map((opt) => (
                 <Button
                   key={opt.mode}
                   variant="ghost"
                   size="sm"
                   onClick={() => viewModes.onChange(opt.mode)}
-                  className={`!p-1.5 rounded-md transition-all ${viewModes.current === opt.mode
-                      ? 'bg-white text-emerald-600 border-2 border-emerald-500'
-                      : '!text-gray-400 hover:text-gray-600 hover:bg-gray-100/50'
+                  className={`!p-1.5 rounded-lg transition-all duration-300 ${viewModes.current === opt.mode
+                      ? 'bg-white text-blue-600 shadow-sm border-none ring-1 ring-gray-900/5'
+                      : '!text-gray-400 hover:text-gray-600 hover:bg-gray-200/30'
                     }`}
                   title={opt.label || opt.mode}
                 >
-                  {opt.icon}
+                  {React.isValidElement(opt.icon) ? React.cloneElement(opt.icon as React.ReactElement, { 
+                    size: 16, 
+                    strokeWidth: viewModes.current === opt.mode ? 2.5 : 2 
+                  } as any) : opt.icon}
                 </Button>
               ))}
             </div>

@@ -11,6 +11,7 @@ import {
   ArrowLeft, Save, Loader2, User, FileText, FileCheck,
   FileQuestion, AlertCircle, Info, ChevronRight, CheckCircle2, Zap
 } from 'lucide-react';
+import { FormSkeleton } from '@/components/shared/skeletons/FormSkeleton';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAppStore } from '@/lib/store/useAppStore';
 
@@ -124,7 +125,7 @@ export const InvoiceRequestFormView: React.FC<Props> = ({ company, user, onNavig
     }
   };
 
-  if (loading) return <div className="flex flex-col items-center justify-center py-24 gap-4 bg-white rounded-2xl border border-gray-100 min-h-[400px]"><Loader2 className="animate-spin text-indigo-600" size={32} /><Subtext className="text-[10px]  uppercase  text-gray-400">Menyiapkan Form Request...</Subtext></div>;
+  if (loading) return <FormSkeleton />;
 
   return (
     <div className="max-w-4xl p-6 md:p-8 space-y-8">

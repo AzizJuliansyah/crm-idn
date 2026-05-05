@@ -9,9 +9,10 @@ import { ActionButton } from '@/components/shared/buttons/ActionButton';
 import { supabase } from '@/lib/supabase';
 import { Company, AutonumberSetting } from '@/lib/types';
 import {
-  Hash, FileText, FileCheck, Loader2, Save,
-  ChevronDown, Calendar, Truck, Sparkles, ToggleLeft, ToggleRight
+  Hash, FileText, FileCheck, Save,
+  ChevronDown, Calendar, Truck, Sparkles, ToggleLeft, ToggleRight, Loader2
 } from 'lucide-react';
+import { FormSkeleton } from '@/components/shared/skeletons/FormSkeleton';
 
 interface Props {
   company: Company;
@@ -227,7 +228,7 @@ export const SalesAutonumberView: React.FC<Props> = ({ company }) => {
     }
   };
 
-  if (loading) return <div className="flex flex-col items-center justify-center py-24"><Loader2 className="animate-spin text-blue-600 mb-4" /><Subtext className="text-[10px]  uppercase  text-gray-400">Memuat Pengaturan...</Subtext></div>;
+  if (loading) return <FormSkeleton />;
 
   return (
     <div className="max-w-5xl flex flex-col space-y-6">

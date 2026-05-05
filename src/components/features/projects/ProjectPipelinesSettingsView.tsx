@@ -6,9 +6,10 @@ import { supabase } from '@/lib/supabase';
 import { ProjectPipeline, Company, ProjectCustomField } from '@/lib/types';
 import {
   Plus, Edit2, Trash2, GripVertical, Save, X,
-  Loader2, Workflow, AlertTriangle,
+  Workflow, AlertTriangle, Loader2,
   ArrowUp, ArrowDown, Type, Hash, Calendar as CalendarIcon
 } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 import { ConfirmDeleteModal } from '@/components/shared/modals/ConfirmDeleteModal';
 import { ActionButton } from '@/components/shared/buttons/ActionButton';
 
@@ -218,7 +219,7 @@ export const ProjectPipelinesSettingsView: React.FC<Props> = ({ company }) => {
     }
   };
 
-  if (loading) return <div className="flex flex-col items-center justify-center py-24"><Loader2 className="animate-spin text-blue-600 mb-4" /><Subtext className="text-[10px] uppercase font-bold text-gray-400">Memuat Konfigurasi...</Subtext></div>;
+  if (loading) return <TableSkeleton hasFilterBar={false} />;
 
   return (
     <div className="flex flex-col space-y-6 max-w-5xl">

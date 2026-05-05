@@ -133,10 +133,14 @@ export const DashboardOverview: React.FC<DashboardProps> = ({ company, initialSt
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
   };
 
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center h-96 gap-4">
-      <Loader2 className="animate-spin text-blue-600" size={40} />
-      <Subtext className="text-gray-400  uppercase  text-[10px]">Menyusun Dashboard Perusahaan...</Subtext>
+
+  const StatSkeleton = () => <div className="h-8 w-20 bg-white/20 rounded animate-pulse mt-2" />;
+  const ChartSkeleton = () => (
+    <div className="h-72 w-full bg-gray-50 rounded-xl flex items-center justify-center animate-pulse border border-gray-100">
+      <div className="flex flex-col items-center gap-2">
+        <Loader2 className="animate-spin text-gray-200" size={24} />
+        <div className="h-2 w-24 bg-gray-100 rounded" />
+      </div>
     </div>
   );
 
@@ -159,7 +163,7 @@ export const DashboardOverview: React.FC<DashboardProps> = ({ company, initialSt
             </div>
           </div>
           <Subtext className="!text-blue-50 text-[10px]  uppercase tracking-[0.15em] mb-1 relative z-10">Total Leads</Subtext>
-          <H2 className="text-white">{stats.totalLeads}</H2>
+          {loading && !stats.totalLeads ? <StatSkeleton /> : <H2 className="text-white">{stats.totalLeads}</H2>}
         </Link>
 
         <Link 
@@ -177,7 +181,7 @@ export const DashboardOverview: React.FC<DashboardProps> = ({ company, initialSt
             </div>
           </div>
           <Subtext className="!text-purple-50 text-[10px]  uppercase tracking-[0.15em] mb-1 relative z-10">Active Deals</Subtext>
-          <H2 className="text-white">{stats.totalDeals}</H2>
+          {loading && !stats.totalDeals ? <StatSkeleton /> : <H2 className="text-white">{stats.totalDeals}</H2>}
         </Link>
 
         <Link 
@@ -195,7 +199,7 @@ export const DashboardOverview: React.FC<DashboardProps> = ({ company, initialSt
             </div>
           </div>
           <Subtext className="!text-emerald-50 text-[10px]  uppercase tracking-[0.15em] mb-1 relative z-10">Total Revenue</Subtext>
-          <H2 className="text-white">{formatIDR(stats.totalRevenue)}</H2>
+          {loading && !stats.totalRevenue ? <StatSkeleton /> : <H2 className="text-white">{formatIDR(stats.totalRevenue)}</H2>}
         </Link>
 
         <Link 
@@ -213,7 +217,7 @@ export const DashboardOverview: React.FC<DashboardProps> = ({ company, initialSt
             </div>
           </div>
           <Subtext className="!text-rose-50 text-[10px]  uppercase tracking-[0.15em] mb-1 relative z-10">Support Tickets</Subtext>
-          <H2 className="text-white">{stats.activeTickets}</H2>
+          {loading && !stats.activeTickets ? <StatSkeleton /> : <H2 className="text-white">{stats.activeTickets}</H2>}
         </Link>
       </div>
 
@@ -228,19 +232,23 @@ export const DashboardOverview: React.FC<DashboardProps> = ({ company, initialSt
             <Calendar size={20} className="text-gray-300" />
           </div>
           <div className="h-72 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={stats.revenueMonthly}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 'bold' }} dy={10} />
-                <YAxis hide />
-                <Tooltip
-                  cursor={{ fill: '#f9fafb' }}
-                  contentStyle={{ borderRadius: '12px', border: '2px solid #d1d5db', boxShadow: 'none', fontWeight: 'bold', fontSize: '12px' }}
-                  formatter={(value: any) => [formatIDR(Number(value)), 'Revenue']}
-                />
-                <Bar dataKey="amount" fill="#4F46E5" radius={[6, 6, 0, 0]} barSize={40} />
-              </BarChart>
-            </ResponsiveContainer>
+            {loading && stats.revenueMonthly.length === 0 ? (
+              <ChartSkeleton />
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats.revenueMonthly}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 'bold' }} dy={10} />
+                  <YAxis hide />
+                  <Tooltip
+                    cursor={{ fill: '#f9fafb' }}
+                    contentStyle={{ borderRadius: '12px', border: '2px solid #d1d5db', boxShadow: 'none', fontWeight: 'bold', fontSize: '12px' }}
+                    formatter={(value: any) => [formatIDR(Number(value)), 'Revenue']}
+                  />
+                  <Bar dataKey="amount" fill="#4F46E5" radius={[6, 6, 0, 0]} barSize={40} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </div>
 
@@ -253,24 +261,28 @@ export const DashboardOverview: React.FC<DashboardProps> = ({ company, initialSt
             <Layers size={20} className="text-gray-300" />
           </div>
           <div className="h-72 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={stats.dealsFunnel}>
-                <defs>
-                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.2} />
-                    <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 9, fontWeight: 'bold' }} dy={10} />
-                <YAxis hide />
-                <Tooltip
-                  contentStyle={{ borderRadius: '12px', border: '2px solid #d1d5db', boxShadow: 'none', fontWeight: 'bold', fontSize: '12px' }}
-                  formatter={(value: any) => [formatIDR(Number(value)), 'Value']}
-                />
-                <Area type="monotone" dataKey="value" stroke="#10B981" fillOpacity={1} fill="url(#colorValue)" strokeWidth={4} />
-              </AreaChart>
-            </ResponsiveContainer>
+            {loading && stats.dealsFunnel.length === 0 ? (
+              <ChartSkeleton />
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={stats.dealsFunnel}>
+                  <defs>
+                    <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10B981" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 9, fontWeight: 'bold' }} dy={10} />
+                  <YAxis hide />
+                  <Tooltip
+                    contentStyle={{ borderRadius: '12px', border: '2px solid #d1d5db', boxShadow: 'none', fontWeight: 'bold', fontSize: '12px' }}
+                    formatter={(value: any) => [formatIDR(Number(value)), 'Value']}
+                  />
+                  <Area type="monotone" dataKey="value" stroke="#10B981" fillOpacity={1} fill="url(#colorValue)" strokeWidth={4} />
+                </AreaChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </div>
       </div>
@@ -283,22 +295,28 @@ export const DashboardOverview: React.FC<DashboardProps> = ({ company, initialSt
             <Subtext>Analisis channel pemasaran terkuat.</Subtext>
           </div>
           <div className="h-64 w-full relative">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={stats.leadsBySource}
-                  innerRadius={70}
-                  outerRadius={90}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {stats.leadsBySource.map((_: any, index: number) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="none" />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', fontSize: '11px', fontWeight: 'bold' }} />
-              </PieChart>
-            </ResponsiveContainer>
+            {loading && stats.leadsBySource.length === 0 ? (
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="w-32 h-32 rounded-full border-4 border-gray-100 border-t-blue-500 animate-spin" />
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={stats.leadsBySource}
+                    innerRadius={70}
+                    outerRadius={90}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {stats.leadsBySource.map((_: any, index: number) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="none" />
+                    ))}
+                  </Pie>
+                  <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', fontSize: '11px', fontWeight: 'bold' }} />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <Globe size={24} className="text-gray-100 mb-1" />
               <Label className="text-[10px]  text-gray-400 uppercase ">Global</Label>
@@ -328,17 +346,21 @@ export const DashboardOverview: React.FC<DashboardProps> = ({ company, initialSt
             </div>
           </div>
           <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={stats.ticketsPriority}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 'bold' }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 10 }} />
-                <Tooltip
-                  contentStyle={{ borderRadius: '12px', border: '2px solid #d1d5db', boxShadow: 'none', fontSize: '12px' }}
-                />
-                <Line type="monotone" dataKey="value" stroke="#EF4444" strokeWidth={5} dot={{ r: 5, fill: '#EF4444', strokeWidth: 3, stroke: '#fff' }} activeDot={{ r: 8 }} />
-              </LineChart>
-            </ResponsiveContainer>
+            {loading && stats.ticketsPriority.length === 0 ? (
+              <ChartSkeleton />
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={stats.ticketsPriority}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 'bold' }} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 10 }} />
+                  <Tooltip
+                    contentStyle={{ borderRadius: '12px', border: '2px solid #d1d5db', boxShadow: 'none', fontSize: '12px' }}
+                  />
+                  <Line type="monotone" dataKey="value" stroke="#EF4444" strokeWidth={5} dot={{ r: 5, fill: '#EF4444', strokeWidth: 3, stroke: '#fff' }} activeDot={{ r: 8 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
           </div>
           <div className="mt-6 p-5 bg-gray-50 rounded-xl flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -382,29 +404,42 @@ export const DashboardOverview: React.FC<DashboardProps> = ({ company, initialSt
             </TableRow>
           </TableHeader>
           <TableBody>
-            {stats.recentLeads.map((lead: any, idx: number) => (
-              <TableRow key={idx}>
-                <TableCell>
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-[10px]  text-gray-400 uppercase">
-                      {lead.name.charAt(0)}
-                    </div>
-                    <Label className="text-sm  text-gray-900">{lead.name}</Label>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge variant="ghost" className="text-indigo-600 bg-indigo-50 border-none">{lead.source}</Badge>
-                </TableCell>
-                <TableCell className=" text-gray-400">
-                  {new Date(lead.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
-                </TableCell>
-                <TableCell className="text-center">
-                  <Badge variant="success" className="border-emerald-100 bg-emerald-50 text-emerald-600 rounded-full">{lead.status}</Badge>
-                </TableCell>
-              </TableRow>
-            ))}
-            {stats.recentLeads.length === 0 && (
-              <TableEmpty colSpan={4} message="Belum ada data leads masuk" />
+            {loading && stats.recentLeads.length === 0 ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell><div className="h-4 w-32 bg-gray-100 animate-pulse rounded" /></TableCell>
+                  <TableCell><div className="h-4 w-20 bg-gray-100 animate-pulse rounded" /></TableCell>
+                  <TableCell><div className="h-4 w-24 bg-gray-100 animate-pulse rounded" /></TableCell>
+                  <TableCell><div className="h-6 w-16 bg-gray-100 animate-pulse rounded mx-auto" /></TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <>
+                {stats.recentLeads.map((lead: any, idx: number) => (
+                  <TableRow key={idx}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-[10px]  text-gray-400 uppercase">
+                          {lead.name.charAt(0)}
+                        </div>
+                        <Label className="text-sm  text-gray-900">{lead.name}</Label>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="ghost" className="text-indigo-600 bg-indigo-50 border-none">{lead.source}</Badge>
+                    </TableCell>
+                    <TableCell className=" text-gray-400">
+                      {new Date(lead.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Badge variant="success" className="border-emerald-100 bg-emerald-50 text-emerald-600 rounded-full">{lead.status}</Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {stats.recentLeads.length === 0 && (
+                  <TableEmpty colSpan={4} message="Belum ada data leads masuk" />
+                )}
+              </>
             )}
           </TableBody>
         </Table>

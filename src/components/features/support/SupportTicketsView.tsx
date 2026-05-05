@@ -9,9 +9,9 @@ import { useAppStore } from '@/lib/store/useAppStore';
 import { supabase } from '@/lib/supabase';
 import { SupportTicket, Profile, Company, CompanyMember, SupportStage, Client, TicketTopic } from '@/lib/types';
 import {
-  Plus, Trello, Table as TableIcon,
-  Loader2 as LoaderIcon, List, LayoutGrid
+  Plus, Trello, Table as TableIcon, List, LayoutGrid
 } from 'lucide-react';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 import { ConfirmBulkDeleteModal } from '@/components/shared/modals/ConfirmBulkDeleteModal';
 import { ConfirmBulkStatusModal } from '@/components/shared/modals/ConfirmBulkStatusModal';
 import { ConfirmDeleteModal } from '@/components/shared/modals/ConfirmDeleteModal';
@@ -269,12 +269,7 @@ export const SupportTicketsView: React.FC<Props> = ({
     return groups;
   }, [tickets, stages]);
 
-  if (ticketsLoading && tickets.length === 0) return (
-    <div className="flex flex-col items-center justify-center py-24 bg-white rounded-2xl border border-gray-100 min-h-[400px]">
-      <LoaderIcon className="animate-spin text-rose-600 mb-4" size={32} />
-      <Subtext className="text-[10px]  uppercase  text-gray-400">Sinkronisasi Customer Support...</Subtext>
-    </div>
-  );
+  if (ticketsLoading && tickets.length === 0) return <TableSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 text-gray-900">

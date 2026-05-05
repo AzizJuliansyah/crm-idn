@@ -29,6 +29,7 @@ import { StandardFilterBar } from '@/components/shared/filters/StandardFilterBar
 import { ConfirmBulkDeleteModal } from '@/components/shared/modals/ConfirmBulkDeleteModal';
 import { ConfirmBulkStatusModal } from '@/components/shared/modals/ConfirmBulkStatusModal';
 import { exportToExcel, ExcelColumn } from '@/lib/utils/excelExport';
+import { TableSkeleton } from '@/components/shared/tables/TableSkeleton';
 
 interface Props {
   company: Company;
@@ -66,7 +67,6 @@ export const InvoiceRequestsView: React.FC<Props> = ({ company }) => {
 
   const { bulkDeleteRequests, bulkUpdateStatus: bulkStatusMutation } = useInvoiceRequestMutations();
 
-  const requests = requestsData?.data || [];
   const totalCount = requestsData?.totalCount || 0;
 
   useEffect(() => {
@@ -440,6 +440,10 @@ export const InvoiceRequestsView: React.FC<Props> = ({ company }) => {
       )
     }
   ], [activeCompanyMembers, hasApprovalPermission, handleDownloadInvoice, handleUpdateStatus, router]);
+
+  const requests = requestsData?.data || [];
+
+  if (loading && requests.length === 0) return <TableSkeleton />;
 
   return (
     <div className="flex flex-col gap-6 text-gray-900">
