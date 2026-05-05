@@ -438,8 +438,13 @@ export const generateTemplate6 = async (
 
   if (qData.discount_value > 0) {
     currentY += 6;
-    safeText(doc, 'Diskon', summaryLabelX, currentY);
-    safeText(doc, `-${formatIDR(qData.discount_value)}`, summaryValueX, currentY);
+    const discountLabel = qData.discount_type === '%' ? `Diskon (${qData.discount_value}%)` : 'Diskon';
+    const discountAmount = qData.discount_type === '%' 
+      ? (qData.subtotal * (qData.discount_value / 100)) 
+      : qData.discount_value;
+
+    safeText(doc, discountLabel, summaryLabelX, currentY);
+    safeText(doc, `-${formatIDR(discountAmount)}`, summaryValueX, currentY);
   }
 
   currentY += 6;

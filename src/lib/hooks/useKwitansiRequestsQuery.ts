@@ -28,13 +28,38 @@ export function useKwitansiRequestsQuery({
         .eq('company_id', companyId);
 
       if (searchTerm) {
-        // Since we can't easily filter joined tables in a simple .or for this Supabase version/setup often,
-        // we use a keyword search approach or filter on the client side if small, 
-        // but here we try to filter by ID or numbers if possible, or just name.
-        query = query.or(`status.ilike.%${searchTerm}%`); 
-        // Note: Realistically, server-side search across joined tables in Supabase 
-        // usually requires a database function or computed column for best results.
-        // For now, we'll implement standard field filtering.
+        // Fetch IDs of related records that match the searchTerm
+        const [clientRes, companyRes, invoiceRes, proformaRes] = await Promise.all([
+          supabase.from('clients').select('id').ilike('name', `%${searchTerm}%`),
+          supabase.from('client_companies').select('id').ilike('name', `%${searchTerm}%`),
+          supabase.from('invoices').select('id').ilike('number', `%${searchTerm}%`),
+          supabase.from('proformas').select('id').ilike('number', `%${searchTerm}%`)
+        ]);
+
+        const clientIds = clientRes.data?.map(c => c.id) || [];
+        const companyIds = companyRes.data?.map(c => c.id) || [];
+        
+        if (companyIds.length > 0) {
+          const { data: companyClients } = await supabase
+            .from('clients')
+            .select('id')
+            .in('client_company_id', companyIds);
+          
+          companyClients?.forEach(c => {
+            if (!clientIds.includes(c.id)) clientIds.push(c.id);
+          });
+        }
+
+        const invoiceIds = invoiceRes.data?.map(i => i.id) || [];
+        const proformaIds = proformaRes.data?.map(p => p.id) || [];
+
+        // Combine into a single OR filter on the main table
+        const orConditions = [`notes.ilike.%${searchTerm}%`];
+        if (clientIds.length > 0) orConditions.push(`client_id.in.(${clientIds.join(',')})`);
+        if (invoiceIds.length > 0) orConditions.push(`invoice_id.in.(${invoiceIds.join(',')})`);
+        if (proformaIds.length > 0) orConditions.push(`proforma_id.in.(${proformaIds.join(',')})`);
+
+        query = query.or(orConditions.join(','));
       }
 
       if (filterStatus && filterStatus !== 'all') {

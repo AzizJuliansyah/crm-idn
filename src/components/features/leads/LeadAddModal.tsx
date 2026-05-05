@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import React, { useState, useCallback } from 'react';
 import { Input, Textarea, Button, Modal, H4, ComboBox, Label } from '@/components/ui';
 import { ClientFormModal } from '@/components/features/clients/components/ClientFormModal';
+import { ClientCompanyFormModal } from '@/components/features/clients/components/ClientCompanyFormModal';
 import { useInfiniteScroll } from '@/lib/hooks/useInfiniteScroll';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAppStore } from '@/lib/store/useAppStore';
@@ -35,6 +36,11 @@ export const LeadAddModal: React.FC<LeadAddModalProps> = ({
   const [isClientModalOpen, setIsClientModalOpen] = useState(false);
   const [clientForm, setClientForm] = useState<Partial<Client>>({ salutation: '', name: '', email: '', whatsapp: '', client_company_id: null });
   const [isProcessingQuick, setIsProcessingQuick] = useState(false);
+
+  // ClientCompanyFormModal State
+  const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false);
+  const [companyForm, setCompanyForm] = useState<Partial<ClientCompany>>({ name: '', address: '', email: '', whatsapp: '', category_id: undefined });
+  const [isProcessingCompany, setIsProcessingCompany] = useState(false);
 
   const fetchClients = useCallback(async ({ from, to }: { from: number, to: number }) => {
     let query = supabase.from('clients')
@@ -126,6 +132,52 @@ export const LeadAddModal: React.FC<LeadAddModalProps> = ({
       setIsClientModalOpen(false);
       setClientForm({ salutation: '', name: '', email: '', whatsapp: '', client_company_id: null });
     } catch (err: any) { showToast(err.message, 'error'); } finally { setIsProcessingQuick(false); }
+  };
+
+  const handleSaveCompany = async (formData: Partial<ClientCompany>) => {
+    if (!formData.name?.trim()) return;
+    setIsProcessingCompany(true);
+    try {
+      const { data, error } = await supabase.from('client_companies').insert({
+        company_id: company.id,
+        name: formData.name.trim(),
+        address: formData.address,
+        email: formData.email,
+        whatsapp: formData.whatsapp,
+        category_id: formData.category_id
+      }).select().single();
+      if (error) throw error;
+
+      // Invalidate metadata queries to refresh clientCompanies list
+      queryClient.invalidateQueries({ queryKey: ['client-companies', company.id] });
+      
+      // Set the new company ID in the form
+      setForm(prev => ({ ...prev, client_company_id: data.id }));
+      
+      setIsCompanyModalOpen(false);
+      setCompanyForm({ name: '', address: '', email: '', whatsapp: '', category_id: undefined });
+      showToast('Perusahaan baru berhasil ditambahkan!', 'success');
+    } catch (err: any) { 
+      showToast(err.message, 'error'); 
+    } finally { 
+      setIsProcessingCompany(false); 
+    }
+  };
+
+  const handleQuickAddCategory = async (name: string) => {
+    try {
+      const { data, error } = await supabase.from('client_company_categories').insert({
+        company_id: company.id,
+        name: name.trim()
+      }).select().single();
+      if (error) throw error;
+      
+      queryClient.invalidateQueries({ queryKey: ['client-company-categories', company.id] });
+      return data;
+    } catch (err: any) {
+      showToast(err.message, 'error');
+      return null;
+    }
   };
 
   const handleClose = () => {
@@ -321,6 +373,8 @@ export const LeadAddModal: React.FC<LeadAddModalProps> = ({
                   { value: '', label: 'Personal / Individual' },
                   ...clientCompanies.map(co => ({ value: co.id.toString(), label: co.name }))
                 ]}
+                onAddNew={() => setIsCompanyModalOpen(true)}
+                addNewLabel="Tambah Perusahaan Baru"
               />
             </div>
           </div>
@@ -394,6 +448,18 @@ export const LeadAddModal: React.FC<LeadAddModalProps> = ({
         clientCompanies={clientCompanies}
         categories={categories}
         companyId={company.id}
+      />
+
+      <ClientCompanyFormModal
+        isOpen={isCompanyModalOpen}
+        onClose={() => setIsCompanyModalOpen(false)}
+        form={companyForm}
+        setForm={setCompanyForm}
+        isProcessing={isProcessingCompany}
+        onSave={handleSaveCompany}
+        categories={categories}
+        companyId={company.id}
+        onQuickAddCategory={handleQuickAddCategory}
       />
     </Modal>
   );

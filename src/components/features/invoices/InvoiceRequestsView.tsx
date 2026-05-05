@@ -453,7 +453,7 @@ export const InvoiceRequestsView: React.FC<Props> = ({ company }) => {
         searchTerm={filters.searchTerm}
         onSearchChange={filters.setSearchTerm}
         onExport={handleExportRequests}
-        searchPlaceholder="Cari request..."
+        searchPlaceholder="Cari notes, client, perusahaan, atau nomor..."
         primaryAction={{
           label: "Request Baru",
           onClick: () => router.push('/dashboard/sales/invoice-requests/create'),

@@ -231,8 +231,13 @@ export const downloadQuotationPDF = async (q: Quotation, company: Company) => {
 
     if (q.discount_value > 0) {
       currentTotalY += 8;
-      safeText('Diskon', summaryLabelX, currentTotalY);
-      safeText(`-${formatIDR(q.discount_value)}`, summaryValueX, currentTotalY, { align: 'right' });
+      const discountLabel = q.discount_type === '%' ? `Diskon (${q.discount_value}%)` : 'Diskon';
+      const discountAmount = q.discount_type === '%' 
+        ? (q.subtotal * (q.discount_value / 100)) 
+        : q.discount_value;
+
+      safeText(discountLabel, summaryLabelX, currentTotalY);
+      safeText(`-${formatIDR(discountAmount)}`, summaryValueX, currentTotalY, { align: 'right' });
     }
 
     if (q.tax_value > 0) {

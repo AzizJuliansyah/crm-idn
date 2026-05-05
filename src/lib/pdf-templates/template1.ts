@@ -147,8 +147,13 @@ export const generateTemplate1 = async (
 
   if (qData.discount_value > 0) {
     currentY += 6;
-    safeText(doc, 'Diskon', labelX, currentY);
-    safeText(doc, `-${formatIDR(qData.discount_value)}`, valueX, currentY, { align: 'right' });
+    const discountLabel = qData.discount_type === '%' ? `Diskon (${qData.discount_value}%)` : 'Diskon';
+    const discountAmount = qData.discount_type === '%' 
+      ? (qData.subtotal * (qData.discount_value / 100)) 
+      : qData.discount_value;
+
+    safeText(doc, discountLabel, labelX, currentY);
+    safeText(doc, `-${formatIDR(discountAmount)}`, valueX, currentY, { align: 'right' });
   }
 
   currentY += 6;

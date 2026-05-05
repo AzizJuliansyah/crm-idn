@@ -32,13 +32,38 @@ export function useInvoiceRequestsQuery({
       }
 
       if (searchTerm) {
-        // Since we can't easily filter joined tables with server-side .ilike across all relations in one go,
-        // we use the common pattern of filtering by requester notes or client names if possible,
-        // or just rely on a simple client-side search if the dataset is small, 
-        // but for TRUE server-side with joins, we handle what we can on the main table.
-        // For this architecture, we usually filter by top-level or joined name if using RPC or specific views.
-        // Here we'll stick to basic main table search and allow partial joined matches if the DB supports it.
-        query = query.or(`notes.ilike.%${searchTerm}%`);
+        // Fetch IDs of related records that match the searchTerm
+        const [clientRes, companyRes, quotationRes, proformaRes] = await Promise.all([
+          supabase.from('clients').select('id').ilike('name', `%${searchTerm}%`),
+          supabase.from('client_companies').select('id').ilike('name', `%${searchTerm}%`),
+          supabase.from('quotations').select('id').ilike('number', `%${searchTerm}%`),
+          supabase.from('proformas').select('id').ilike('number', `%${searchTerm}%`)
+        ]);
+
+        const clientIds = clientRes.data?.map(c => c.id) || [];
+        const companyIds = companyRes.data?.map(c => c.id) || [];
+        
+        if (companyIds.length > 0) {
+          const { data: companyClients } = await supabase
+            .from('clients')
+            .select('id')
+            .in('client_company_id', companyIds);
+          
+          companyClients?.forEach(c => {
+            if (!clientIds.includes(c.id)) clientIds.push(c.id);
+          });
+        }
+
+        const quotationIds = quotationRes.data?.map(q => q.id) || [];
+        const proformaIds = proformaRes.data?.map(p => p.id) || [];
+
+        // Combine into a single OR filter on the main table
+        const orConditions = [`notes.ilike.%${searchTerm}%`];
+        if (clientIds.length > 0) orConditions.push(`client_id.in.(${clientIds.join(',')})`);
+        if (quotationIds.length > 0) orConditions.push(`quotation_id.in.(${quotationIds.join(',')})`);
+        if (proformaIds.length > 0) orConditions.push(`proforma_id.in.(${proformaIds.join(',')})`);
+
+        query = query.or(orConditions.join(','));
       }
 
       if (sortConfig) {

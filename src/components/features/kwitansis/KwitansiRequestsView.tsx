@@ -430,7 +430,7 @@ export const KwitansiRequestsView: React.FC<Props> = ({ company }) => {
                 subtitle="Kelola dan pantau seluruh permintaan pembuatan kwitansi pelanggan."
                 searchTerm={filters.searchTerm}
                 onSearchChange={filters.setSearchTerm}
-                searchPlaceholder="Cari request..."
+                searchPlaceholder="Cari notes, client, perusahaan, atau nomor..."
                 primaryAction={{
                     label: "Request Baru",
                     onClick: () => router.push('/dashboard/sales/kwitansi-requests/create'),
